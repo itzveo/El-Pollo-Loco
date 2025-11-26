@@ -1,0 +1,74 @@
+@font-face {
+    font-family: 'rye';
+    src: url('font/rye.ttf')  format('truetype');
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url("img/bg.png");
+  background-position: bottom center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  box-sizing: border-box;
+  margin: 0;
+  height: 100vh;
+  width: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+  overflow-y: auto;
+}
+
+h1 {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  font-family: 'rye', Arial, Helvetica, sans-serif;
+  font-size: 96px;
+  filter: drop-shadow(4px, 4px, 4px, rgba(0, 0, 0, 0.8));
+  color: #f5b05b;
+  text-shadow: #000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px,#000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px;
+  margin: 32px;
+}
+
+a {
+  text-decoration: none;
+  color: #f5b05b;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 100vh;
+  padding-inline: 32px;
+  width: 80%;
+  overflow-y: auto;
+  text-shadow: #000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px;
+}
+
+.main::-webkit-scrollbar {
+  display: none;
+}
+
+.main {
+  -ms-overflow-style: none;  
+  scrollbar-width: none;
+}
+
+@media (max-width: 720px) {
+  h1 {
+    font-size: 78px;
+  }
+}
+
+@media (max-height: 720px) {
+  h1 {
+    font-size: 78px;
+  }
+}

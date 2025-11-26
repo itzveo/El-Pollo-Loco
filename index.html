@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="icon" type="image/png" sizes="512x512" href="./img/fav/android-chrome-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="./img/fav/android-chrome-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./img/fav/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./img/fav/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./img/fav/favicon-16x16.png">
+    <link rel="manifest" href="./img/fav/site.webmanifest">
+  </head>
+  <body onload="init()">
+    <h1>EL POLLO LOCO</h1>
+
+    <div id="fullscreen" class="hud">
+        <canvas id="canvas" width="720" height="480"></canvas>
+
+        <div class="btn-wrapper-top">
+          <div class="btns-right">
+            <a href="impressum.html"><button id="impressum" class="btn imp" src="impressum.html"><img src="img/0_hud/imp.svg" alt=""></button></a>
+            <button id="startGame" class="btn start"><img src="img/0_hud/play.svg" alt=""></button>
+            <button id="exitGame" class="btn exit"><img src="img/0_hud/exit.svg" alt=""></button>
+            <button id="muteSound" class="btn mute"><img src="img/0_hud/sound.svg" alt=""></button>
+            <button id="enableSound" class="btn sound"><img src="img/0_hud/mute.svg" alt=""></button>
+          </div>
+        </div>
+
+        <div class="btn-wrapper-bot">
+            <div class="btns-left">
+                <button class="btn left" id="btnLeft"><img src="img/0_hud/arrow.svg" alt=""></button>
+                <button class="btn right" id="btnRight"><img src="img/0_hud/arrow.svg" alt=""></button>
+            </div>
+            <div class="btns-right">
+                <button class="btn jump" id="btnJump"><img src="img/0_hud/arrow.svg" alt=""></button>
+                <button class="btn throw" id="btnThrow"><img src="img/0_hud/bottle.svg" alt=""></button>
+            </div>
+        </div> 
+
+        <div class="controls">
+          <div class="controls-left">
+            <div class="control-tile">
+              <div class="key-frame">
+                <div class="key"><h3>←</h3></div>
+              </div>
+              <h2>= MOVE LEFT</h2>
+            </div>
+            <div class="control-tile">
+              <div class="key-frame">
+                <div class="key"><h3>↑</h3></div>
+              </div><h2>/</h2><div class="key-frame space-frame">
+                <div class="key spacebar"><h3 class="underline">_____</h3></div>
+              </div>
+              <h2>= JUMP</h2>
+            </div>
+          </div>
+          <div class="controls-right">
+            <div class="control-tile">
+              <div class="key-frame">
+                <div class="key"><h3>→</h3></div>
+              </div>
+              <h2>= MOVE RIGHT</h2>
+            </div>
+            <div class="control-tile">
+              <div class="key-frame">
+                <div class="key"><h3>D</h3></div>
+              </div>
+              <h2>= THROW BOTTLE</h2>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="turn-dialog">
+        <video height="600vh" width="100%" autoplay muted loop src="img/dialog.mp4"></video>
+    </div>
+
+    <audio src="audio/baby_hurt.mp3"></audio>
+    <audio src="audio/baby_idle.mp3"></audio>
+    <audio src="audio/boss_idle.mp3"></audio>
+    <audio src="audio/bottle_breaking.mp3"></audio>
+    <audio src="audio/bottle_collect.mp3"></audio>
+    <audio src="audio/chicken_hurt.mp3"></audio>
+    <audio src="audio/chicken_idle.mp3"></audio>
+    <audio src="audio/coin_pickup.mp3"></audio>
+    <audio src="audio/hurt.mp3"></audio>
+    <audio src="audio/"></audio>
+
+    <script src="./models/drawable-object.class.js"></script>
+    <script src="./models/movable-object.class.js"></script>
+    <script src="./models/character.class.js"></script>
+    <script src="./models/chicken.class.js"></script>
+    <script src="./models/baby.class.js"></script>
+    <script src="./models/cloud.class.js"></script>
+    <script src="./models/hp-bar.class.js"></script>
+    <script src="./models/coin-bar.class.js"></script>
+    <script src="./models/bottle-bar.class.js"></script>
+    <script src="./models/world.class.js"></script>
+    <script src="./models/bg-object.class.js"></script>
+    <script src="./models/keyboard.class.js"></script>
+    <script src="./models/level.class.js"></script>
+    <script src="./models/throwable-object.class.js"></script>
+    <script src="./models/collectable-object.class.js"></script>
+    <script src="./models/boss.class.js"></script>
+    <script src="./levels/title.js"></script>
+    <script src="./levels/level1.js"></script>
+    <script src="./js/game.js"></script>
+  </body>
+</html>

@@ -14,7 +14,7 @@ function startSettings() {
     world.startGame();
     document.getElementById("startGame").style.display = "none";
     document.getElementById("exitGame").style.display = "flex";
-    document.getElementById("impressum").style.display = "none";
+    document.getElementById("legal").style.display = "none";
   });
 }
 
@@ -23,7 +23,7 @@ function exitSettings() {
     world.exitGame();
     document.getElementById("startGame").style.display = "flex";
     document.getElementById("exitGame").style.display = "none";
-    document.getElementById("impressum").style.display = "flex";
+    document.getElementById("legal").style.display = "flex";
   });
 }
 

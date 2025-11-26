@@ -45,7 +45,6 @@ a:hover {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  height: 100vh;
   padding-inline: 32px;
   width: 80%;
   overflow-y: auto;

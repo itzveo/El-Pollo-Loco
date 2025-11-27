@@ -59,25 +59,31 @@ class Character extends movableObject {
   }
 
   move() {
-    setInterval(() => {
-      if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-        this.moveRight();
-        this.inverted = false;
-      }
-      if (this.world.keyboard.LEFT && this.x > 0) {
-        this.moveLeft();
-        this.inverted = true;
-      }
-      if (
-        (this.world.keyboard.UP && !this.IsAboveGround()) ||
-        (this.world.keyboard.SPACE && !this.IsAboveGround())
-      ) {
-        this.jump();
-      }
+  setInterval(() => {
 
-      this.world.camera_x = -this.x + 80;
-    }, 1000 / 60);
-  }
+    if (!this.world || !this.world.level) return;
+
+    if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+      this.moveRight();
+      this.inverted = false;
+    }
+
+    if (this.world.keyboard.LEFT && this.x > 0) {
+      this.moveLeft();
+      this.inverted = true;
+    }
+
+    if (
+      (this.world.keyboard.UP && !this.IsAboveGround()) ||
+      (this.world.keyboard.SPACE && !this.IsAboveGround())
+    ) {
+      this.jump();
+    }
+
+    this.world.camera_x = -this.x + 80;
+
+  }, 1000 / 60);
+}
 
   showImgs() {
     setInterval(() => {

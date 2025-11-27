@@ -11,6 +11,7 @@ function init() {
 
 function startSettings() {
   document.getElementById("startGame").addEventListener("click", () => {
+    world = new World(canvas, keyboard);
     world.startGame();
     document.getElementById("startGame").style.display = "none";
     document.getElementById("exitGame").style.display = "flex";

@@ -17,8 +17,8 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
-    this.draw();
     this.setWorld();
+    this.draw();
   }
 
   startGame() {
@@ -38,6 +38,9 @@ class World {
     this.throwableObjects = [];
     this.collectableObjects = [];
 
+    this.character = new Character();
+    this.setWorld();
+    
     this.camera_x = 0;
 
     this.hpBar.setPercentage(100);
@@ -89,7 +92,7 @@ class World {
     this.addObjectsToMap(this.level.bgObjects);
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.throwableObjects);
-    this.addObjectsToMap(this.collectableObjects);
+    this.addObjectsToMap(this.level.collectableObjects);
     this.addObjectsToMap(this.level.enemies);
     this.addToMap(this.character);
 

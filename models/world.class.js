@@ -7,6 +7,7 @@ class World {
   collectableObjects = [];
 
   state = "title";
+  level = null;
 
   ctx;
   canvas;
@@ -25,12 +26,14 @@ class World {
     this.state = "playing";
     initLevel1();
     this.level = level1;
+    this.character.x = 100;
+    this.character.y = 180;
     this.run();
   }
 
   exitGame() {
     this.state = "title";
-    
+
     clearInterval(this.gameInterval);
     this.gameInterval = null;
 
@@ -40,9 +43,8 @@ class World {
 
     this.character = new Character();
     this.setWorld();
-    
-    this.camera_x = 0;
 
+    this.camera_x = 0;
     this.hpBar.setPercentage(100);
     this.coinBar.setPercentage(0);
     this.bottleBar.setPercentage(0);
@@ -54,8 +56,11 @@ class World {
 
   run() {
     this.gameInterval = setInterval(() => {
+      if (this.state !== "playing") return;
+
       this.checkCollissions();
       this.checkThrowableObjects();
+      this.checkLevelEnd();
     }, 100);
   }
 
@@ -78,57 +83,133 @@ class World {
     }
   }
 
-  draw() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  checkLevelEnd() {
+    if (this.level.level_end_x && this.character.x >= this.level.level_end_x) {
+      if (this.level === level3) {
+        return;
+      }
 
-    if (this.state === "title") {
-      this.drawTitleScreen();
-      requestAnimationFrame(() => this.draw());
-      return;
+      this.state = "level_transition";
+      this.startLevelTransition();
     }
+  }
 
-    this.ctx.translate(this.camera_x, 0);
+  startLevelTransition() {
+    clearInterval(this.gameInterval);
+    this.state = "level_transition";
 
+    setTimeout(() => {
+      if (this.level === level1) {
+        initLevel2();
+        this.level = level2;
+      } else if (this.level === level2) {
+        initLevel3();
+        this.level = level3;
+      }
+
+      this.character.x = 100;
+      this.character.y = 180;
+      this.camera_x = 0;
+      this.state = "playing";
+      this.run();
+    }, 3000);
+  }
+
+  addAllObjects() {
     this.addObjectsToMap(this.level.bgObjects);
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.throwableObjects);
     this.addObjectsToMap(this.level.collectableObjects);
     this.addObjectsToMap(this.level.enemies);
     this.addToMap(this.character);
+  }
 
+  draw() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    if (this.handleScreens()) return;
+
+    if (!this.level) {
+      requestAnimationFrame(() => this.draw());
+      return;
+    }
+
+    this.ctx.translate(this.camera_x, 0);
+    this.addAllObjects();
     this.ctx.translate(-this.camera_x, 0);
-    // --- SPACE FOR FIXED OBJECTS ---
+
     this.addBars();
 
-    let self = this;
-    requestAnimationFrame(function () {
-      self.draw();
-    });
+    requestAnimationFrame(() => this.draw());
+  }
+
+  handleScreens() {
+    switch (this.state) {
+      case "title":
+        this.drawTitleScreen();
+        break;
+      case "level_transition":
+        this.drawLevelTransition();
+        break;
+      case "lost":
+        this.drawLoseScreen();
+        break;
+      case "won":
+        this.drawWinScreen();
+        break;
+      default:
+        return false;
+    }
+
+    requestAnimationFrame(() => this.draw());
+    return true;
+  }
+
+  drawLevelTransition() {
+    this.ctx.fillStyle = "black";
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.ctx.fillStyle = "white";
+    this.ctx.font = "80px rye";
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+
+    let levelText = "LEVEL ";
+    if (this.level === level1) levelText += "2";
+    else if (this.level === level2) levelText += "3";
+
+    this.ctx.fillText(levelText, this.canvas.width / 2, this.canvas.height / 2);
   }
 
   drawTitleScreen() {
     titleScreen.draw(this.ctx);
   }
 
+  drawWinScreen() {
+    let img = new Image();
+    img.src = "img/You won, you lost/You Win A.png";
+
+    this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  drawLoseScreen() {
+  let img = new Image();
+  img.src = "img/You won, you lost/Game over A.png";
+
+  this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+}
+
   addBars() {
     this.addToMap(this.hpBar);
     this.addToMap(this.coinBar);
     this.addToMap(this.bottleBar);
-    this.ctx.translate(this.camera_x, 0);
-    this.ctx.translate(-this.camera_x, 0);
   }
 
   addToMap(mO) {
-    if (mO.inverted) {
-      this.flipImage(mO);
-    }
+    if (mO.inverted) this.flipImage(mO);
     mO.draw(this.ctx);
-
     mO.drawBorder(this.ctx);
-
-    if (mO.inverted) {
-      this.flipImageBack(mO);
-    }
+    if (mO.inverted) this.flipImageBack(mO);
   }
 
   flipImage(mO) {
@@ -144,8 +225,6 @@ class World {
   }
 
   addObjectsToMap(objects) {
-    objects.forEach((o) => {
-      this.addToMap(o);
-    });
+    objects.forEach((o) => this.addToMap(o));
   }
 }

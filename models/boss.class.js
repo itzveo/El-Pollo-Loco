@@ -1,6 +1,7 @@
 class Boss extends movableObject {
     height = 400;
     width = 250;
+    energy = 100;
     y = 50;
 
     IMGS_WALKING = [

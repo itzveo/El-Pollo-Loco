@@ -59,6 +59,8 @@ class World {
       if (this.state !== "playing") return;
 
       this.checkCollissions();
+      this.checkCoins();
+      this.checkBottles();
       this.checkThrowableObjects();
       this.checkLevelEnd();
     }, 100);
@@ -73,14 +75,67 @@ class World {
     });
   }
 
+  checkCoins() {
+    this.level.collectableObjects = this.level.collectableObjects.filter(
+      (obj) => {
+        if (obj instanceof coin && this.character.isColliding(obj)) {
+          this.collectCoin();
+          return false;
+        }
+        return true;
+      }
+    );
+  }
+
+  collectCoin() {
+    if (!this.coinCount) this.coinCount = 0;
+
+    this.coinCount++;
+    console.log("Coins:", this.coinCount);
+
+    if ([5, 10, 15, 20, 25].includes(this.coinCount)) {
+      let percentage = (this.coinCount / 25) * 100;
+      this.coinBar.setPercentage(percentage);
+    }
+  }
+
   checkThrowableObjects() {
-    if (this.keyboard.THROW) {
+    if (this.keyboard.THROW && this.bottleCount > 0) {
       let bottle = new throwableObject(
         this.character.x + 100,
         this.character.y + 100
       );
+
       this.throwableObjects.push(bottle);
+
+      this.bottleCount--;
+      console.log("Bottle used → remaining:", this.bottleCount);
+
+      let percentage = (this.bottleCount / 5) * 100;
+      this.bottleBar.setPercentage(percentage);
     }
+  }
+
+  checkBottles() {
+    this.level.collectableObjects = this.level.collectableObjects.filter(
+      (obj) => {
+        if (obj instanceof salsaBottle && this.character.isColliding(obj)) {
+          this.collectBottle();
+          return false;
+        }
+        return true;
+      }
+    );
+  }
+
+  collectBottle() {
+    if (!this.bottleCount) this.bottleCount = 0;
+
+    this.bottleCount++;
+    console.log("Bottles:", this.bottleCount);
+
+    let percentage = Math.min((this.bottleCount / 5) * 100, 100);
+    this.bottleBar.setPercentage(percentage);
   }
 
   checkLevelEnd() {
@@ -193,11 +248,11 @@ class World {
   }
 
   drawLoseScreen() {
-  let img = new Image();
-  img.src = "img/You won, you lost/Game over A.png";
+    let img = new Image();
+    img.src = "img/You won, you lost/Game over A.png";
 
-  this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
-}
+    this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+  }
 
   addBars() {
     this.addToMap(this.hpBar);

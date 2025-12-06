@@ -12,4 +12,9 @@ class salsaBottle extends collectableObject {
     this.loadImage("img/6_salsa_bottle/1_salsa_bottle_on_ground.png");
     this.loadImgs(this.IMGS);
   }
+
+  animate() {
+    this.animationInterval = setInterval(() => {
+      this.playAnimation(this.IMGS)}, 50);
+  }
 }

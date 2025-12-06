@@ -5,8 +5,6 @@ class Boss extends movableObject {
     y = 50;
 
     IMGS_WALKING = [
-        'img/4_enemie_boss_chicken/2_alert/G5.png',
-        'img/4_enemie_boss_chicken/2_alert/G6.png',
         'img/4_enemie_boss_chicken/2_alert/G7.png',
         'img/4_enemie_boss_chicken/2_alert/G8.png',
         'img/4_enemie_boss_chicken/2_alert/G9.png',
@@ -18,7 +16,7 @@ class Boss extends movableObject {
     constructor() {
         super().loadImage(this.IMGS_WALKING[0]);
         this.loadImgs(this.IMGS_WALKING);
-        this.x = 2500;
+        this.x = 700;
         this.animate();
     }
 

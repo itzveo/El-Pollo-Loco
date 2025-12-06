@@ -162,17 +162,18 @@ canvas {
   justify-content: center;
   border-radius: 10px;
   background: linear-gradient(180deg,#f6f6f6,#e0e0e0);
-  box-shadow: 0 6px 0 #bdbdbd, 0 10px 20px rgba(0,0,0,0.12);
+  box-shadow: 0 8px 0 #bdbdbd, 0 14px 28px rgba(0,0,0,0.14);
   border: 1px solid rgba(0,0,0,0.08);
   cursor:pointer;
   user-select:none;
   -webkit-user-select:none;
   outline:none;
+  transform: translateY(-3px);
 }
 
 .key:hover{
-  transform: translateY(-3px);
-  box-shadow: 0 8px 0 #bdbdbd, 0 14px 28px rgba(0,0,0,0.14);
+  box-shadow: 0 6px 0 #bdbdbd, 0 10px 20px rgba(0,0,0,0.12);
+  transform: translateY(0px);
   cursor: pointer;
 }
 

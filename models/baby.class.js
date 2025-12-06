@@ -17,13 +17,12 @@ class Baby extends movableObject {
     "img/3_enemies_chicken/chicken_small/1_walk/3_w.png",
   ];
 
-  IMGS_DEAD = [
-    "img/3_enemies_chicken/chicken_small/2_dead/dead.png"
-  ];
+  IMGS_DEAD = ["img/3_enemies_chicken/chicken_small/2_dead/dead.png"];
 
   constructor() {
     super().loadImage("img/3_enemies_chicken/chicken_small/1_walk/3_w.png");
     this.loadImgs(this.IMGS_WALKING);
+    this.loadImgs(this.IMGS_DEAD);
 
     this.x = 750 + Math.random() * 1000;
     this.speed = 1.75 + Math.random() * 0.25;
@@ -39,22 +38,38 @@ class Baby extends movableObject {
 
   move() {
     setInterval(() => {
-      this.moveLeft();
+      if (!this.dead) this.moveLeft();
     }, 1000 / 60);
 
     setInterval(() => {
-      this.jump();
-    }, 1000)
+      if (!this.dead) this.jump();
+    }, 1000);
   }
 
   showImgs() {
     setInterval(() => {
-      this.playAnimation(this.IMGS_WALKING);
-      if (this.isHurt()) {
+      if (this.dead) {
         this.playAnimation(this.IMGS_DEAD);
-      } else if (this.IsAboveGround()) {
+        return;
+      }
+
+      if (this.IsAboveGround()) {
         this.playAnimation(this.IMGS_JUMPING);
-      } 
-    }, 50);
+      } else {
+        this.playAnimation(this.IMGS_WALKING);
+      }
+    }, 100);
+  }
+
+  die() {
+    this.energy = 0;
+    this.dead = true;
+    this.speed = 0;
+    this.speedY = 0;
+    this.currentIMG = 0;
+
+    setTimeout(() => {
+      this.remove = true;
+    }, 500);
   }
 }

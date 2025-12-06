@@ -9,7 +9,6 @@ function initLevel2() {
       new Baby(),
       new Baby(),
       new Baby(),
-      new Boss(),
     ],
 
     [new Cloud()],

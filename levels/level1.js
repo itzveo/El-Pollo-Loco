@@ -9,7 +9,7 @@ function initLevel1() {
       new Baby(),
       new Baby(),
       new Baby(),
-      new Boss(),
+      new Boss()
     ],
 
     [new Cloud()],
@@ -17,12 +17,12 @@ function initLevel1() {
     loopBgs(),
 
     [
-      new salsaBottle("img/6_salsa_bottle/1_salsa_bottle_on_ground.png"),
-      new salsaBottle("img/6_salsa_bottle/1_salsa_bottle_on_ground.png"),
-      new salsaBottle("img/6_salsa_bottle/1_salsa_bottle_on_ground.png"),
-      new coin("img/8_coin/coin_1.png"),
-      new coin("img/8_coin/coin_1.png"),
-      new coin("img/8_coin/coin_1.png"),
+      new salsaBottle(),
+      new salsaBottle(),
+      new salsaBottle(),
+      new coin(),
+      new coin(),
+      new coin(),
     ]
   );
 }

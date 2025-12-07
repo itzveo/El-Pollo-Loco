@@ -3,6 +3,7 @@ class World {
   hpBar = new hpBar();
   coinBar = new coinBar();
   bottleBar = new bottleBar();
+  bossBar = new bossBar();
   throwableObjects = [];
   collectableObjects = [];
 
@@ -28,6 +29,11 @@ class World {
     this.level = level1;
     this.character.x = 100;
     this.character.y = 180;
+
+    if (this.level.boss) {
+      this.bossBar = new bossBar(this.level.boss);
+    }
+
     this.run();
   }
 
@@ -77,34 +83,50 @@ class World {
   }
 
   checkBottleCollisions() {
-    this.throwableObjects = this.throwableObjects.filter((bottle) => {
-      if (bottle.isBreaking) {
-        if (bottle.remove) return false;
-        return true;
-      }
+  this.throwableObjects = this.throwableObjects.filter((bottle) => {
+    if (!bottle.IsAboveGround() && !bottle.isBreaking) {
+      bottle.break();
+      return true; 
+    }
 
-      let hitEnemy = false;
+    if (bottle.isBreaking) {
+      return !bottle.remove; 
+    }
 
-      this.level.enemies.forEach((enemy) => {
-        if (!enemy.dead && bottle.isColliding(enemy)) {
-          enemy.die();
-          bottle.break();
-          hitEnemy = true;
-        }
-      });
+    let hitEnemy = false;
 
-      if (hitEnemy) return true;
+    this.level.enemies.forEach((enemy) => {
+      if (!(enemy instanceof Chicken) && !(enemy instanceof Baby)) return;
 
-      if (!bottle.IsAboveGround()) {
+      if (!enemy.dead && bottle.isColliding(enemy)) {
+        if (enemy.die) enemy.die();
         bottle.break();
-        return true;
+        hitEnemy = true;
       }
-
-      return true;
     });
 
-    this.level.enemies = this.level.enemies.filter(enemy => !enemy.remove);
-  }
+    let boss = this.level.boss;
+    if (boss && !boss.dead && bottle.isColliding(boss)) {
+      boss.hit();
+      this.bossBar.setPercentage(boss.energy);
+
+      bottle.break();
+      hitEnemy = true;
+
+      if (boss.energy <= 0) {
+        setTimeout(() => {
+          this.state = "won";
+        }, 2000);
+      }
+    }
+
+    if (hitEnemy) return true;
+
+    return true; 
+  });
+
+  this.level.enemies = this.level.enemies.filter((e) => !e.remove);
+}
 
   checkCoins() {
     this.level.collectableObjects = this.level.collectableObjects.filter(
@@ -197,6 +219,11 @@ class World {
       this.character.y = 180;
       this.camera_x = 0;
       this.state = "playing";
+
+      if (this.level.boss) {
+        this.bossBar = new bossBar(this.level.boss);
+      }
+
       this.run();
     }, 3000);
   }
@@ -207,6 +234,9 @@ class World {
     this.addObjectsToMap(this.throwableObjects);
     this.addObjectsToMap(this.level.collectableObjects);
     this.addObjectsToMap(this.level.enemies);
+
+    if (this.bossBar) this.addToMap(this.bossBar);
+
     this.addToMap(this.character);
   }
 

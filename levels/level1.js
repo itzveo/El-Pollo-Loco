@@ -25,6 +25,8 @@ function initLevel1() {
       new coin(),
     ]
   );
+
+  level1.boss = level1.enemies.find(e => e instanceof Boss);
 }
 
 function loopBgs() {

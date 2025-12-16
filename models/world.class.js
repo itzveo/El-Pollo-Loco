@@ -32,6 +32,8 @@ class World {
 
     if (this.level.boss) {
       this.bossBar = new bossBar(this.level.boss);
+    } else {
+      this.bossBar = null;
     }
 
     this.run();
@@ -77,56 +79,61 @@ class World {
     this.level.enemies.forEach((enemy) => {
       if (this.character.isColliding(enemy)) {
         this.character.isDamaged();
+        document.getElementById("player_hurt").play();
         this.hpBar.setPercentage(this.character.energy);
       }
     });
   }
 
   checkBottleCollisions() {
-  this.throwableObjects = this.throwableObjects.filter((bottle) => {
-    if (!bottle.IsAboveGround() && !bottle.isBreaking) {
-      bottle.break();
-      return true; 
-    }
-
-    if (bottle.isBreaking) {
-      return !bottle.remove; 
-    }
-
-    let hitEnemy = false;
-
-    this.level.enemies.forEach((enemy) => {
-      if (!(enemy instanceof Chicken) && !(enemy instanceof Baby)) return;
-
-      if (!enemy.dead && bottle.isColliding(enemy)) {
-        if (enemy.die) enemy.die();
+    this.throwableObjects = this.throwableObjects.filter((bottle) => {
+      if (!bottle.IsAboveGround() && !bottle.isBreaking) {
         bottle.break();
-        hitEnemy = true;
+        document.getElementById("bottle_breaking").play();
+        return true;
       }
+
+      if (bottle.isBreaking) {
+        document.getElementById("bottle_breaking").play();
+        return !bottle.remove;
+      }
+
+      let hitEnemy = false;
+
+      this.level.enemies.forEach((enemy) => {
+        if (!(enemy instanceof Chicken) && !(enemy instanceof Baby)) return;
+
+        if (!enemy.dead && bottle.isColliding(enemy)) {
+          if (enemy.die) enemy.die();
+          bottle.break();
+          document.getElementById("bottle_breaking").play();
+          hitEnemy = true;
+        }
+      });
+
+      let boss = this.level.boss;
+      if (boss && !boss.dead && bottle.isColliding(boss)) {
+        boss.hit();
+        this.bossBar.setPercentage(boss.energy);
+
+        bottle.break();
+        document.getElementById("bottle_breaking").play();
+        hitEnemy = true;
+
+        if (boss.energy <= 0) {
+          setTimeout(() => {
+            this.state = "won";
+          }, 2000);
+        }
+      }
+
+      if (hitEnemy) return true;
+
+      return true;
     });
 
-    let boss = this.level.boss;
-    if (boss && !boss.dead && bottle.isColliding(boss)) {
-      boss.hit();
-      this.bossBar.setPercentage(boss.energy);
-
-      bottle.break();
-      hitEnemy = true;
-
-      if (boss.energy <= 0) {
-        setTimeout(() => {
-          this.state = "won";
-        }, 2000);
-      }
-    }
-
-    if (hitEnemy) return true;
-
-    return true; 
-  });
-
-  this.level.enemies = this.level.enemies.filter((e) => !e.remove);
-}
+    this.level.enemies = this.level.enemies.filter((e) => !e.remove);
+  }
 
   checkCoins() {
     this.level.collectableObjects = this.level.collectableObjects.filter(
@@ -143,8 +150,8 @@ class World {
   collectCoin() {
     if (!this.coinCount) this.coinCount = 0;
 
+    document.getElementById("coin_collect").play();
     this.coinCount++;
-    console.log("Coins:", this.coinCount);
 
     if ([5, 10, 15, 20, 25].includes(this.coinCount)) {
       let percentage = (this.coinCount / 25) * 100;
@@ -162,7 +169,6 @@ class World {
       this.throwableObjects.push(bottle);
 
       this.bottleCount--;
-      console.log("Bottle used → remaining:", this.bottleCount);
 
       let percentage = (this.bottleCount / 5) * 100;
       this.bottleBar.setPercentage(percentage);
@@ -183,9 +189,9 @@ class World {
 
   collectBottle() {
     if (!this.bottleCount) this.bottleCount = 0;
-
+    
+    document.getElementById("bottle_collect").play();
     this.bottleCount++;
-    console.log("Bottles:", this.bottleCount);
 
     let percentage = Math.min((this.bottleCount / 5) * 100, 100);
     this.bottleBar.setPercentage(percentage);
@@ -222,6 +228,8 @@ class World {
 
       if (this.level.boss) {
         this.bossBar = new bossBar(this.level.boss);
+      } else {
+        this.bossBar = null;
       }
 
       this.run();
@@ -235,8 +243,9 @@ class World {
     this.addObjectsToMap(this.level.collectableObjects);
     this.addObjectsToMap(this.level.enemies);
 
-    if (this.bossBar) this.addToMap(this.bossBar);
-
+    if (this.level.boss && this.bossBar) {
+      this.addToMap(this.bossBar);
+    }
     this.addToMap(this.character);
   }
 
@@ -285,7 +294,7 @@ class World {
     this.ctx.fillStyle = "black";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-    this.ctx.fillStyle = "white";
+    this.ctx.fillStyle = "#f5b05b";
     this.ctx.font = "80px rye";
     this.ctx.textAlign = "center";
     this.ctx.textBaseline = "middle";

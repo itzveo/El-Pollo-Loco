@@ -2,7 +2,7 @@ class Level {
   bgObjects;
   enemies;
   clouds;
-  level_end_x = 1200;
+  level_end_x = 7200;
   collectableObjects;
 
   constructor(enemies, clouds, bgObjects, collectableObjects) {

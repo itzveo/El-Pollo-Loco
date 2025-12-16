@@ -1,6 +1,8 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let music = document.getElementById("music");
+music.volume = 0.1;
 
 function init() {
   canvas = document.getElementById("canvas");
@@ -13,6 +15,7 @@ function startSettings() {
   document.getElementById("startGame").addEventListener("click", () => {
     world = new World(canvas, keyboard);
     world.startGame();
+    music.play();
     document.getElementById("startGame").style.display = "none";
     document.getElementById("exitGame").style.display = "flex";
     document.getElementById("legal").style.display = "none";
@@ -22,6 +25,7 @@ function startSettings() {
 function exitSettings() {
   document.getElementById("exitGame").addEventListener("click", () => {
     world.exitGame();
+    music.pause();
     document.getElementById("startGame").style.display = "flex";
     document.getElementById("exitGame").style.display = "none";
     document.getElementById("legal").style.display = "flex";
@@ -34,15 +38,15 @@ const unmuteBtn = document.getElementById("enableSound");
 const allAudio = document.querySelectorAll("audio");
 
 muteBtn.addEventListener("click", () => {
-    allAudio.forEach(a => a.muted = true);
-    muteBtn.style.display = "none";
-    unmuteBtn.style.display = "flex";
+  allAudio.forEach((a) => (a.muted = true));
+  muteBtn.style.display = "none";
+  unmuteBtn.style.display = "flex";
 });
 
 unmuteBtn.addEventListener("click", () => {
-    allAudio.forEach(a => a.muted = false);
-    muteBtn.style.display = "flex";
-    unmuteBtn.style.display = "none";
+  allAudio.forEach((a) => (a.muted = false));
+  muteBtn.style.display = "flex";
+  unmuteBtn.style.display = "none";
 });
 
 window.addEventListener("keydown", (e) => {

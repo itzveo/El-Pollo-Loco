@@ -46,6 +46,8 @@ class Chicken extends movableObject {
     this.speedY = 0;
     this.currentIMG = 0;
 
+    document.getElementById("chicken_hurt").play();
+
     setTimeout(() => {
         this.remove = true; 
     }, 500);

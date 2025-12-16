@@ -38,7 +38,13 @@ class Baby extends movableObject {
 
   move() {
     setInterval(() => {
-      if (!this.dead) this.moveLeft();
+      if (!this.dead) {
+        if (this.IsAboveGround()) {
+          this.x -= this.speed * 2.5;
+        } else {
+          this.moveLeft();
+        }
+      }
     }, 1000 / 60);
 
     setInterval(() => {
@@ -67,6 +73,8 @@ class Baby extends movableObject {
     this.speed = 0;
     this.speedY = 0;
     this.currentIMG = 0;
+
+    document.getElementById("baby_hurt").play();
 
     setTimeout(() => {
       this.remove = true;

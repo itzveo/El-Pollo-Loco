@@ -25,4 +25,6 @@ function initLevel3() {
       new coin("img/8_coin/coin_1.png"),
     ]
   );
+
+  level3.boss = level3.enemies.find(e => e instanceof Boss);
 }

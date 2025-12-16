@@ -45,7 +45,7 @@ class Boss extends movableObject {
     this.loadImgs(this.IMGS_WALK);
     this.loadImgs(this.IMGS_DEAD);
 
-    this.x = 700;
+    this.x = 7500;
     this.startX = this.x;
 
     this.animate();
@@ -80,7 +80,7 @@ class Boss extends movableObject {
     if (this.state === "dead") return;
     if (this.state === "walk") return;
 
-    this.energy -= 20;
+    this.energy -= 50;
     this.state = "hurt";
 
     setTimeout(() => {
@@ -89,7 +89,7 @@ class Boss extends movableObject {
       } else {
         this.startDeath();
       }
-    }, 1000/60);
+    }, 1000/144);
   }
 
   walkLogic() {

@@ -10,6 +10,11 @@ class bottleBar extends drawableObject {
 
   percentage = 0;
 
+  /**
+   * Creates a new status bar instance.
+   * Loads all images, sets position and size,
+   * and initializes the percentage to zero.
+   */
   constructor() {
     super();
     this.loadImgs(this.IMGS);
@@ -20,12 +25,22 @@ class bottleBar extends drawableObject {
     this.setPercentage(0);
   }
 
+  /**
+   * Updates the current percentage value and
+   * sets the corresponding status bar image.
+   * @param {number} percentage - Current value (0–100).
+   */
   setPercentage(percentage) {
     this.percentage = percentage;
     let path = this.IMGS[this.resolveImgIndex()];
     this.img = this.imgCache[path];
   }
 
+  /**
+ * Determines the image index based on
+ * the current percentage value.
+ * @returns {number} The index of the image to be displayed.
+ */
   resolveImgIndex() {
     if (this.percentage == 100) {
       return 5;

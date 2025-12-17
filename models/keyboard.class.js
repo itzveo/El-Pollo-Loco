@@ -6,6 +6,9 @@ class Keyboard {
   SPACE = false;
   THROW = false;
 
+  /**
+   * Binds the UI Buttons to the according keys 
+   */
   constructor() {
     this.bindBtnPressEvents();
   }

@@ -20,7 +20,6 @@ class throwableObject extends movableObject {
 
     this.loadImage("img/6_salsa_bottle/salsa_bottle.png");
 
-    // Images im Cache laden
     this.IMGS_BREAK.forEach(path => { 
       let img = new Image();
       img.src = path;

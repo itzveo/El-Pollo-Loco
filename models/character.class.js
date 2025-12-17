@@ -7,7 +7,7 @@ class Character extends movableObject {
   speed = 10;
   idleTime = 0;
   idleThreshold = 1000;
-  sleepThreshold = 10000;
+  sleepThreshold = 5000;
 
   IMGS_WALKING = [
     "img/2_character_pepe/2_walk/W-21.png",
@@ -69,9 +69,14 @@ class Character extends movableObject {
     "img/2_character_pepe/1_idle/long_idle/I-17.png",
     "img/2_character_pepe/1_idle/long_idle/I-18.png",
     "img/2_character_pepe/1_idle/long_idle/I-19.png",
-    "img/2_character_pepe/1_idle/long_idle/I-20.png"
+    "img/2_character_pepe/1_idle/long_idle/I-20.png",
   ];
 
+  /**
+   * Creates the main player character.
+   * Loads all character animations, applies gravity,
+   * and starts movement and animation loops.
+   */
   constructor() {
     super().loadImage("img/2_character_pepe/1_idle/idle/I-1.png");
     this.loadImgs(this.IMGS_WALKING);
@@ -84,11 +89,19 @@ class Character extends movableObject {
     this.animate();
   }
 
+  /**
+   * Starts the main animation and movement logic
+   * for the player character.
+   */
   animate() {
     this.move();
     this.showImgs();
   }
 
+  /**
+   * Handles player movement and jumping based on keyboard input.
+   * Updates the camera position relative to the character.
+   */
   move() {
     setInterval(() => {
       if (!this.world || !this.world.level) return;
@@ -118,6 +131,10 @@ class Character extends movableObject {
     }, 1000 / 60);
   }
 
+  /**
+   * Tracks how long the player has been idle.
+   * Resets the idle timer when any movement or action key is pressed.
+   */
   updateIdleTime() {
     const k = this.world.keyboard;
 
@@ -128,12 +145,22 @@ class Character extends movableObject {
     }
   }
 
+  /**
+   * Determines the current idle state of the character
+   * based on the current idle time.
+   * @returns {string} The idle state ("sleep", "idle", or "none").
+   */
   getIdleState() {
     if (this.idleTime > this.sleepThreshold) return "sleep";
     if (this.idleTime > this.idleThreshold) return "idle";
     return "none";
   }
 
+  /**
+   * Plays idle or sleep animations if the player
+   * has been inactive for a certain amount of time.
+   * @returns {boolean} True if an idle animation was played.
+   */
   handleIdleAnimations() {
     const state = this.getIdleState();
 
@@ -150,6 +177,10 @@ class Character extends movableObject {
     return false;
   }
 
+  /**
+   * Handles character animation states such as
+   * death, hurt, jumping, idle, walking, and default idle.
+   */
   showImgs() {
     setInterval(() => {
       if (this.isDead()) {

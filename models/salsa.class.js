@@ -7,14 +7,24 @@ class salsaBottle extends collectableObject {
     "img/6_salsa_bottle/2_salsa_bottle_on_ground.png",
   ];
 
+  /**
+   * Creates a new salsa bottle object.
+   * Loads the initial image and preloads all animation images.
+   */
   constructor() {
     super();
     this.loadImage("img/6_salsa_bottle/1_salsa_bottle_on_ground.png");
     this.loadImgs(this.IMGS);
+    this.animate();
   }
 
+  /**
+   * Starts the animation loop for the salsa bottle.
+   * Continuously cycles through the preloaded images.
+   */
   animate() {
-    this.animationInterval = setInterval(() => {
-      this.playAnimation(this.IMGS)}, 50);
+    setInterval(() => {
+      this.playAnimation(this.IMGS);
+    }, 500);
   }
 }

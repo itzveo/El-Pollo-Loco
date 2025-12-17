@@ -12,17 +12,28 @@ class Chicken extends movableObject {
 
   IMGS_DEAD = ["img/3_enemies_chicken/chicken_normal/2_dead/dead.png"];
 
+  /**
+   * Creates a new chicken enemy.
+   * Loads walking and death animations,
+   * sets a random start position and speed,
+   * and starts the animation loops.
+   */
   constructor() {
     super().loadImage("img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
     this.loadImgs(this.IMGS_WALKING);
     this.loadImgs(this.IMGS_DEAD);
 
-    this.x = 350 + Math.random() * 1000;
-    this.speed = 0.3 + Math.random() * 0.25;
+    this.x = 600 + Math.random() * 1000;
+    this.speed = 0.5 + Math.random() * 0.25;
 
     this.animate();
   }
 
+  /**
+   * Starts movement and animation intervals for the enemy.
+   * Handles continuous walking and switches animations
+   * depending on whether the enemy is alive or dead.
+   */
   animate() {
     this.walkInterval = setInterval(() => {
       if (!this.dead) {
@@ -39,6 +50,11 @@ class Chicken extends movableObject {
     }, 180);
   }
 
+  /**
+   * Kills the enemy.
+   * Stops all movement, plays the death sound,
+   * and marks the enemy for removal after a short delay.
+   */
   die() {
     this.energy = 0;
     this.dead = true;
@@ -49,7 +65,7 @@ class Chicken extends movableObject {
     document.getElementById("chicken_hurt").play();
 
     setTimeout(() => {
-        this.remove = true; 
+      this.remove = true;
     }, 500);
   }
 }

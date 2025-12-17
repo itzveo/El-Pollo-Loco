@@ -37,6 +37,11 @@ class Boss extends movableObject {
     "img/4_enemie_boss_chicken/5_dead/G26.png",
   ];
 
+  /**
+   * Creates a new boss instance.
+   * Loads all animations, sets the start position,
+   * and starts the animation loop.
+   */
   constructor() {
     super().loadImage(this.IMGS_ALERT[0]);
 
@@ -51,6 +56,10 @@ class Boss extends movableObject {
     this.animate();
   }
 
+  /**
+   * Main animation loop for the boss.
+   * Selects and plays animations based on the current state.
+   */
   animate() {
     setInterval(() => {
       switch (this.state) {
@@ -76,11 +85,16 @@ class Boss extends movableObject {
     }, 120);
   }
 
+  /**
+   * Handles damage taken by the boss.
+   * Reduces energy, triggers hurt state,
+   * and decides whether to continue or die.
+   */
   hit() {
     if (this.state === "dead") return;
     if (this.state === "walk") return;
 
-    this.energy -= 50;
+    this.energy -= 20;
     this.state = "hurt";
 
     setTimeout(() => {
@@ -89,9 +103,13 @@ class Boss extends movableObject {
       } else {
         this.startDeath();
       }
-    }, 1000/144);
+    }, 1000 / 144);
   }
 
+  /**
+   * Controls forward and backward movement logic
+   * during the walking state.
+   */
   walkLogic() {
     if (this.movingForward) {
       this.x -= 30;
@@ -109,18 +127,27 @@ class Boss extends movableObject {
     }
   }
 
+  /**
+   * Starts the forward walking animation and movement.
+   */
   startForwardRun() {
     this.state = "walk";
     this.movingForward = true;
     this.inverted = false;
   }
 
+  /**
+   * Starts the backward walking animation and movement.
+   */
   startBackwardRun() {
     this.state = "walk";
     this.movingBackward = true;
     this.inverted = true;
   }
 
+  /**
+   * Transitions the boss into the dead state.
+   */
   startDeath() {
     this.state = "dead";
     this.dead = true;

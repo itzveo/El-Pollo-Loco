@@ -19,6 +19,11 @@ class Baby extends movableObject {
 
   IMGS_DEAD = ["img/3_enemies_chicken/chicken_small/2_dead/dead.png"];
 
+  /**
+   * Creates a new baby enemy instance.
+   * Initializes images, random position and speed,
+   * applies gravity, and starts animations.
+   */
   constructor() {
     super().loadImage("img/3_enemies_chicken/chicken_small/1_walk/3_w.png");
     this.loadImgs(this.IMGS_WALKING);
@@ -31,11 +36,18 @@ class Baby extends movableObject {
     this.animate();
   }
 
+  /**
+   * Starts movement and animation loops for the baby enemy.
+   */
   animate() {
     this.move();
     this.showImgs();
   }
 
+  /**
+   * Controls horizontal movement and jumping behavior.
+   * Uses intervals to update position and trigger jumps.
+   */
   move() {
     setInterval(() => {
       if (!this.dead) {
@@ -52,6 +64,10 @@ class Baby extends movableObject {
     }, 1000);
   }
 
+  /**
+   * Handles animation state changes depending on
+   * whether the enemy is walking, jumping, or dead.
+   */
   showImgs() {
     setInterval(() => {
       if (this.dead) {
@@ -67,6 +83,11 @@ class Baby extends movableObject {
     }, 100);
   }
 
+  /**
+   * Kills the baby enemy.
+   * Stops movement, plays death sound,
+   * and marks the object for removal.
+   */
   die() {
     this.energy = 0;
     this.dead = true;

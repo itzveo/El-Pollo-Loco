@@ -32,6 +32,10 @@ h1 {
   margin: 32px;
 }
 
+h2 {
+  text-shadow: #000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px,#000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px;
+}
+
 a {
   text-decoration: none;
   color: #f5b05b;

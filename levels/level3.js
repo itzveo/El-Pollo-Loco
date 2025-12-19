@@ -1,30 +1,29 @@
 let level3;
 
 function initLevel3() {
-  level3 = new Level(
-    [
-      new Chicken(),
-      new Chicken(),
-      new Chicken(),
-      new Baby(),
-      new Baby(),
-      new Baby(),
-      new Boss(),
-    ],
+  const enemies = [];
+  const collectables = [];
 
-    [new Cloud()],
+  enemies.push(new Chicken(enemies, world));
+  enemies.push(new Chicken(enemies, world));
+  enemies.push(new Chicken(enemies, world));
 
-    loopBgs(),
+  enemies.push(new Baby(enemies, world));
+  enemies.push(new Baby(enemies, world));
+  enemies.push(new Baby(enemies, world));
 
-    [
-      new salsaBottle("img/6_salsa_bottle/1_salsa_bottle_on_ground.png"),
-      new salsaBottle("img/6_salsa_bottle/1_salsa_bottle_on_ground.png"),
-      new salsaBottle("img/6_salsa_bottle/1_salsa_bottle_on_ground.png"),
-      new coin("img/8_coin/coin_1.png"),
-      new coin("img/8_coin/coin_1.png"),
-      new coin("img/8_coin/coin_1.png"),
-    ]
-  );
+  collectables.push(new salsaBottle(collectables, world));
+  collectables.push(new salsaBottle(collectables, world));
+  collectables.push(new salsaBottle(collectables, world));
 
-  level3.boss = level3.enemies.find(e => e instanceof Boss);
+  collectables.push(new coin(collectables, world));
+  collectables.push(new coin(collectables, world));
+  collectables.push(new coin(collectables, world));
+
+  const boss = new Boss();
+  enemies.push(boss);
+
+  level3 = new Level(enemies, [new Cloud()], loopBgs(), collectables);
+
+  level3.boss = boss;
 }

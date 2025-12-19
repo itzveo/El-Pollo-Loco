@@ -8,6 +8,8 @@ class Character extends movableObject {
   idleTime = 0;
   idleThreshold = 1000;
   sleepThreshold = 5000;
+  dead = false;
+  deathAnimationPlayed = false;
 
   IMGS_WALKING = [
     "img/2_character_pepe/2_walk/W-21.png",
@@ -183,8 +185,11 @@ class Character extends movableObject {
    */
   showImgs() {
     setInterval(() => {
-      if (this.isDead()) {
-        this.playAnimation(this.IMGS_DEAD);
+      if (this.dead) {
+        if (!this.deathAnimationPlayed) {
+          this.playAnimation(this.IMGS_DEAD);
+          this.deathAnimationPlayed = true;
+        }
         return;
       }
 
@@ -209,5 +214,11 @@ class Character extends movableObject {
 
       this.loadImage("img/2_character_pepe/1_idle/idle/I-1.png");
     }, 50);
+  }
+
+  die() {
+    this.dead = true;
+    this.speed = 0;
+    this.speedY = 0;
   }
 }

@@ -108,7 +108,7 @@ canvas {
   transform: rotate(90deg);
 }
 
-.sound, .exit {
+.sound, .exit, .restart {
   display: none;
 }
 

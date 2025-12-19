@@ -1,27 +1,32 @@
 let level2;
 
 function initLevel2() {
-  level2 = new Level(
-    [
-      new Chicken(),
-      new Chicken(),
-      new Chicken(),
-      new Baby(),
-      new Baby(),
-      new Baby(),
-    ],
+  const enemies = [];
+  const collectables = [];
 
-    [new Cloud()],
+  enemies.push(new Chicken(enemies, world));
+  enemies.push(new Chicken(enemies, world));
+  enemies.push(new Chicken(enemies, world));
+  enemies.push(new Chicken(enemies, world));
+  enemies.push(new Chicken(enemies, world));
+  enemies.push(new Chicken(enemies, world));
+  enemies.push(new Chicken(enemies, world));
+  enemies.push(new Chicken(enemies, world));
+  enemies.push(new Chicken(enemies, world));
 
-    loopBgs(),
+  enemies.push(new Baby(enemies, world));
+  enemies.push(new Baby(enemies, world));
+  enemies.push(new Baby(enemies, world));
 
-    [
-      new salsaBottle("img/6_salsa_bottle/1_salsa_bottle_on_ground.png"),
-      new salsaBottle("img/6_salsa_bottle/1_salsa_bottle_on_ground.png"),
-      new salsaBottle("img/6_salsa_bottle/1_salsa_bottle_on_ground.png"),
-      new coin("img/8_coin/coin_1.png"),
-      new coin("img/8_coin/coin_1.png"),
-      new coin("img/8_coin/coin_1.png"),
-    ]
-  );
+  collectables.push(new salsaBottle(collectables, world));
+  collectables.push(new salsaBottle(collectables, world));
+  collectables.push(new salsaBottle(collectables, world));
+
+  collectables.push(new coin(collectables, world));
+  collectables.push(new coin(collectables, world));
+  collectables.push(new coin(collectables, world));
+
+  level2 = new Level(enemies, [new Cloud()], loopBgs(), collectables);
+
+  level2.boss = null;
 }

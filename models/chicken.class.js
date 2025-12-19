@@ -18,12 +18,12 @@ class Chicken extends movableObject {
    * sets a random start position and speed,
    * and starts the animation loops.
    */
-  constructor() {
+  constructor(enemies, world) {
     super().loadImage("img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
     this.loadImgs(this.IMGS_WALKING);
     this.loadImgs(this.IMGS_DEAD);
 
-    this.x = 600 + Math.random() * 1000;
+    this.x = world.getSpawnX(enemies, 600, 6600, 300);
     this.speed = 0.5 + Math.random() * 0.25;
 
     this.animate();

@@ -10,6 +10,9 @@ class World {
   state = "title";
   level = null;
 
+  gameOverPlayed = false;
+  winPlayed = false;
+
   ctx;
   canvas;
   keyboard;
@@ -36,6 +39,8 @@ class World {
    */
   startGame() {
     this.state = "playing";
+    this.gameOverPlayed = false;
+    this.winPlayed = false;
     initLevel1();
     this.level = level1;
     this.character.x = 100;
@@ -56,6 +61,8 @@ class World {
    */
   exitGame() {
     this.state = "title";
+    this.gameOverPlayed = false;
+    this.winPlayed = false;
 
     clearInterval(this.gameInterval);
     this.gameInterval = null;
@@ -98,16 +105,58 @@ class World {
   }
 
   /**
+   * Calculates a safe horizontal spawn position for a new enemy.
+   * Generates a random x-coordinate within a specified range and ensures
+   * it is at least a minimum distance away from all existing enemies.
+   * The function keeps retrying until a valid, safe position is found.
+   * @param {Array<{ x: number }>} existingEnemies - A list of existing enemies, each containing an `x` position.
+   * @param {number} [startX=600] - The starting x-coordinate from which the spawn range begins.
+   * @param {number} [range=6600] - The width of the range within which the enemy can spawn.
+   * @param {number} [minDistance=300] - The minimum allowed horizontal distance from any existing enemy.
+   * @returns {number} - A valid x-coordinate that is safely spaced from all existing enemies.
+   */
+  getSpawnX(existingEnemies, startX = 600, range = 6600, minDistance = 300) {
+    let x;
+    let safe = false;
+
+    while (!safe) {
+      x = startX + Math.random() * range;
+      safe = true;
+
+      for (let enemy of existingEnemies) {
+        if (Math.abs(enemy.x - x) < minDistance) {
+          safe = false;
+          break;
+        }
+      }
+    }
+
+    return x;
+  }
+
+  /**
    * Checks collisions between the player and enemies.
-   * If a collision occurs, the player takes damage
-   * and the health bar is updated.
+   * If a collision occurs, the player takes damage and the health bar is updated.
+   * If energy reaches 0, sets state to "lost".
    */
   checkCollissions() {
     this.level.enemies.forEach((enemy) => {
-      if (this.character.isColliding(enemy)) {
+      if (this.character.isColliding(enemy) && !this.character.dead) {
         this.character.isDamaged();
         document.getElementById("player_hurt").play();
         this.hpBar.setPercentage(this.character.energy);
+
+        if (this.character.energy === 0) {
+          setTimeout(() => {
+            this.state = "lost";
+            if (!this.gameOverPlayed) {
+              music.pause();
+              over.currentTime = 0;
+              over.play();
+              this.gameOverPlayed = true;
+            }
+          }, 2000);
+        }
       }
     });
   }
@@ -147,14 +196,18 @@ class World {
       if (boss && !boss.dead && bottle.isColliding(boss)) {
         boss.hit();
         this.bossBar.setPercentage(boss.energy);
-
         bottle.break();
-        document.getElementById("bottle_breaking").play();
         hitEnemy = true;
 
         if (boss.energy <= 0) {
           setTimeout(() => {
             this.state = "won";
+            if (!this.winPlayed) {
+              music.pause();
+              win.currentTime = 0;
+              win.play();
+              this.winPlayed = true;
+            }
           }, 2000);
         }
       }
@@ -312,10 +365,13 @@ class World {
     this.addObjectsToMap(this.level.collectableObjects);
     this.addObjectsToMap(this.level.enemies);
 
+    if (!this.character.dead) {
+      this.addToMap(this.character);
+    }
+
     if (this.level.boss && this.bossBar) {
       this.addToMap(this.bossBar);
     }
-    this.addToMap(this.character);
   }
 
   /**
@@ -404,6 +460,8 @@ class World {
     img.src = "img/You won, you lost/You Win A.png";
 
     this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+
+    document.getElementById("restartGame").style.display = "flex";
   }
 
   /**
@@ -414,6 +472,8 @@ class World {
     img.src = "img/You won, you lost/Game over A.png";
 
     this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+
+    document.getElementById("restartGame").style.display = "flex";
   }
 
   /**

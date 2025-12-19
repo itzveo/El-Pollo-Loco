@@ -24,12 +24,12 @@ class Baby extends movableObject {
    * Initializes images, random position and speed,
    * applies gravity, and starts animations.
    */
-  constructor() {
+  constructor(enemies, world) {
     super().loadImage("img/3_enemies_chicken/chicken_small/1_walk/3_w.png");
     this.loadImgs(this.IMGS_WALKING);
     this.loadImgs(this.IMGS_DEAD);
 
-    this.x = 750 + Math.random() * 1000;
+    this.x = world.getSpawnX(enemies, 600, 6600, 300);
     this.speed = 1.75 + Math.random() * 0.25;
 
     this.applyGravity();

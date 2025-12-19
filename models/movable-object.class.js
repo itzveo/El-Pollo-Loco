@@ -53,8 +53,10 @@ class movableObject extends drawableObject {
    */
   isDamaged() {
     this.energy -= 20;
-    if (this.energy < 0) {
+
+    if (this.energy <= 0) {
       this.energy = 0;
+      if (this.die) this.die();
     } else {
       this.lastHit = new Date().getTime();
     }

@@ -11,10 +11,12 @@ class salsaBottle extends collectableObject {
    * Creates a new salsa bottle object.
    * Loads the initial image and preloads all animation images.
    */
-  constructor() {
+  constructor(existingCollectables, world) {
     super();
-    this.loadImage("img/6_salsa_bottle/1_salsa_bottle_on_ground.png");
+    this.x = world.getSpawnX(existingCollectables, 600, 6600, 150);
+
     this.loadImgs(this.IMGS);
+    this.img = this.imgCache[this.IMGS[0]];
     this.animate();
   }
 

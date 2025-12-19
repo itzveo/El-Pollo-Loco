@@ -2,7 +2,15 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 let music = document.getElementById("music");
+let over = document.getElementById("game_over");
+let win = document.getElementById("you_win");
+let bossHit = document.getElementById("boss_idle");
+bossHit.volume = 0.1;
 music.volume = 0.1;
+over.volume = 0.3;
+win.volume = 0.8;
+over.loop = false;
+win.loop = false;
 
 /**
  * Initializes the game by setting up the canvas, world, and UI settings.
@@ -41,6 +49,7 @@ function exitSettings() {
     document.getElementById("startGame").style.display = "flex";
     document.getElementById("exitGame").style.display = "none";
     document.getElementById("legal").style.display = "flex";
+    document.getElementById("restartGame").style.display = "none";
   });
 }
 
@@ -56,7 +65,7 @@ const allAudio = document.querySelectorAll("audio");
  * @param {boolean} isMuted - Whether all audio should be muted.
  */
 function setMuteState(isMuted) {
-  allAudio.forEach(a => a.muted = isMuted);
+  allAudio.forEach((a) => (a.muted = isMuted));
 
   if (isMuted) {
     muteBtn.style.display = "none";

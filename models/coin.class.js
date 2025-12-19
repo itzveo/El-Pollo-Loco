@@ -7,10 +7,12 @@ class coin extends collectableObject {
    * Creates a new coin instance.
    * Loads images.
    */
-  constructor() {
+  constructor(existingCollectables, world) {
     super();
-    this.loadImage("img/8_coin/coin_1.png");
+    this.x = world.getSpawnX(existingCollectables, 600, 6600, 150);
+
     this.loadImgs(this.IMGS);
+    this.img = this.imgCache[this.IMGS[0]];
     this.animate();
   }
 

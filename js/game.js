@@ -21,6 +21,7 @@ function init() {
   world = new World(canvas, keyboard);
   startSettings();
   exitSettings();
+  restartSettings();
 }
 
 /**
@@ -31,10 +32,30 @@ function startSettings() {
   document.getElementById("startGame").addEventListener("click", () => {
     world = new World(canvas, keyboard);
     world.startGame();
+    music.currentTime = 0;
     music.play();
     document.getElementById("startGame").style.display = "none";
     document.getElementById("exitGame").style.display = "flex";
     document.getElementById("legal").style.display = "none";
+  });
+}
+
+/**
+ * Adds a click listener to the restart button.
+ * Restarts the game, plays background music, and updates UI visibility.
+ */
+function restartSettings() {
+  document.getElementById("restartGame").addEventListener("click", () => {
+    document.getElementById("restartGame").style.display = "none";
+
+    over.pause();
+    win.pause();
+    over.currentTime = 0;
+    win.currentTime = 0;
+
+    music.currentTime = 0;
+    music.play();
+    world.restartGame();
   });
 }
 
@@ -51,6 +72,64 @@ function exitSettings() {
     document.getElementById("legal").style.display = "flex";
     document.getElementById("restartGame").style.display = "none";
   });
+}
+
+/**
+ * Draws the title screen using the titleScreen object.
+ */
+function drawTitleScreen(ctx, titleScreen) {
+  titleScreen.draw(ctx);
+}
+
+/**
+ * Draws the win screen on the canvas.
+ */
+function drawWinScreen(ctx, canvas, winImg) {
+  if (!winImg.complete) return;
+  ctx.drawImage(winImg, 0, 0, canvas.width, canvas.height);
+  showRestartButton();
+}
+
+/**
+ * Draws the loose screen on the canvas.
+ */
+function drawLooseScreen(ctx, canvas, looseImg) {
+  if (!looseImg.complete) return;
+  ctx.drawImage(looseImg, 0, 0, canvas.width, canvas.height);
+  showRestartButton();
+}
+
+/**
+ * Draws the level transition screen.
+ * Displays the level number centered on a black background.
+ */
+function drawLevelTransition(ctx, canvas, level, level1, level2) {
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#f5b05b";
+  ctx.font = "80px rye";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  let levelText = "LEVEL ";
+  if (level === level1) levelText += "2";
+  else if (level === level2) levelText += "3";
+
+  ctx.fillText(levelText, canvas.width / 2, canvas.height / 2);
+}
+
+/**
+ * shows restart button in the win and lose screen
+ */
+function showRestartButton() {
+  const btn = document.getElementById("restartGame");
+  if (btn.style.display !== "flex") {
+    btn.style.display = "flex";
+  }
+}
+
+function clearAllIntervals() {
+  for (let i = 1; i < 9999; i++) window.clearInterval(i);
 }
 
 const muteBtn = document.getElementById("muteSound");

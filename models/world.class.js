@@ -10,9 +10,6 @@ class World {
   state = "title";
   level = null;
 
-  gameOverPlayed = false;
-  winPlayed = false;
-
   ctx;
   canvas;
   keyboard;
@@ -28,6 +25,13 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+
+    this.winImg = new Image();
+    this.winImg.src = "img/You won, you lost/You Win A.png";
+
+    this.looseImg = new Image();
+    this.looseImg.src = "img/You won, you lost/Game over A.png";
+
     this.setWorld();
     this.draw();
   }
@@ -39,8 +43,6 @@ class World {
    */
   startGame() {
     this.state = "playing";
-    this.gameOverPlayed = false;
-    this.winPlayed = false;
     initLevel1();
     this.level = level1;
     this.character.x = 100;
@@ -56,13 +58,74 @@ class World {
   }
 
   /**
+   * Restarts the game.
+   * Initializes the first level, positions the character,
+   * sets up the boss bar if a boss exists, and starts the game loop.
+   */
+  restartGame() {
+    this.clearAllIntervals();
+
+    this.gameOverPlayed = false;
+    this.winPlayed = false;
+
+    this.state = "resetting";
+
+    clearInterval(this.gameInterval);
+    this.gameInterval = null;
+
+    this.restartRequest();
+  }
+
+  /**
+   * Requests an AnimationFrame and sets properties for the game
+   */
+  restartRequest() {
+    requestAnimationFrame(() => {
+      this.state = "playing";
+
+      this.restartRequestSettings();
+      initLevel1();
+      this.level = level1;
+
+      this.character.x = 100;
+      this.character.y = 180;
+
+      if (this.level.boss) {
+        this.bossBar = new bossBar(this.level.boss);
+      } else {
+        this.bossBar = null;
+      }
+
+      this.run();
+    });
+  }
+
+  /**
+   * Sets the properties for the game to start.
+   */
+  restartRequestSettings() {
+    this.throwableObjects = [];
+    this.collectableObjects = [];
+    this.camera_x = 0;
+
+    this.coinCount = 0;
+    this.bottleCount = 0;
+
+    this.hpBar.setPercentage(100);
+    this.coinBar.setPercentage(0);
+    this.bottleBar.setPercentage(0);
+
+    this.character = new Character();
+    this.setWorld();
+  }
+
+  /**
    * Exits the current game.
    * Stops the game loop, clears objects, resets character and UI bars.
    */
   exitGame() {
+    this.clearAllIntervals();
     this.state = "title";
-    this.gameOverPlayed = false;
-    this.winPlayed = false;
 
     clearInterval(this.gameInterval);
     this.gameInterval = null;
@@ -92,6 +155,8 @@ class World {
    * Checks collisions, collectables, throwable objects, and level end periodically.
    */
   run() {
+    if (this.gameInterval) return;
+
     this.gameInterval = setInterval(() => {
       if (this.state !== "playing") return;
 
@@ -136,88 +201,17 @@ class World {
 
   /**
    * Checks collisions between the player and enemies.
-   * If a collision occurs, the player takes damage and the health bar is updated.
-   * If energy reaches 0, sets state to "lost".
    */
   checkCollissions() {
-    this.level.enemies.forEach((enemy) => {
-      if (this.character.isColliding(enemy) && !this.character.dead) {
-        this.character.isDamaged();
-        document.getElementById("player_hurt").play();
-        this.hpBar.setPercentage(this.character.energy);
-
-        if (this.character.energy === 0) {
-          setTimeout(() => {
-            this.state = "lost";
-            if (!this.gameOverPlayed) {
-              music.pause();
-              over.currentTime = 0;
-              over.play();
-              this.gameOverPlayed = true;
-            }
-          }, 2000);
-        }
-      }
-    });
+    CollisionHandler.checkCollisions(this);
   }
 
   /**
-   * Checks collisions for throwable bottles.
-   * Handles breaking bottles, hitting enemies or boss,
-   * updating boss health bar, and marking bottles for removal.
+   * Checks and handles all bottle collisions with ground, enemies, and boss.
+   * Removes bottles that should be destroyed and filters out dead enemies.
    */
   checkBottleCollisions() {
-    this.throwableObjects = this.throwableObjects.filter((bottle) => {
-      if (!bottle.IsAboveGround() && !bottle.isBreaking) {
-        bottle.break();
-        document.getElementById("bottle_breaking").play();
-        return true;
-      }
-
-      if (bottle.isBreaking) {
-        document.getElementById("bottle_breaking").play();
-        return !bottle.remove;
-      }
-
-      let hitEnemy = false;
-
-      this.level.enemies.forEach((enemy) => {
-        if (!(enemy instanceof Chicken) && !(enemy instanceof Baby)) return;
-
-        if (!enemy.dead && bottle.isColliding(enemy)) {
-          if (enemy.die) enemy.die();
-          bottle.break();
-          document.getElementById("bottle_breaking").play();
-          hitEnemy = true;
-        }
-      });
-
-      let boss = this.level.boss;
-      if (boss && !boss.dead && bottle.isColliding(boss)) {
-        boss.hit();
-        this.bossBar.setPercentage(boss.energy);
-        bottle.break();
-        hitEnemy = true;
-
-        if (boss.energy <= 0) {
-          setTimeout(() => {
-            this.state = "won";
-            if (!this.winPlayed) {
-              music.pause();
-              win.currentTime = 0;
-              win.play();
-              this.winPlayed = true;
-            }
-          }, 2000);
-        }
-      }
-
-      if (hitEnemy) return true;
-
-      return true;
-    });
-
-    this.level.enemies = this.level.enemies.filter((e) => !e.remove);
+    CollisionHandler.checkBottleCollisions(this);
   }
 
   /**
@@ -225,31 +219,15 @@ class World {
    * Removes collected coins and updates coin bar based on total coins collected.
    */
   checkCoins() {
-    this.level.collectableObjects = this.level.collectableObjects.filter(
-      (obj) => {
-        if (obj instanceof coin && this.character.isColliding(obj)) {
-          this.collectCoin();
-          return false;
-        }
-        return true;
-      }
-    );
+    CollectableHandler.checkCoins(this);
   }
 
   /**
-   * Handles collecting a coin.
-   * Plays sound, increments coin count, and updates coin bar.
+   * Checks if the character collects any salsa bottles.
+   * Removes collected bottles and updates the bottle bar.
    */
-  collectCoin() {
-    if (!this.coinCount) this.coinCount = 0;
-
-    document.getElementById("coin_collect").play();
-    this.coinCount++;
-
-    if ([5, 10, 15, 20, 25].includes(this.coinCount)) {
-      let percentage = (this.coinCount / 25) * 100;
-      this.coinBar.setPercentage(percentage);
-    }
+  checkBottles() {
+    CollectableHandler.checkBottles(this);
   }
 
   /**
@@ -275,37 +253,6 @@ class World {
   }
 
   /**
-   * Checks if the character collects any salsa bottles.
-   * Removes collected bottles and updates the bottle bar.
-   */
-  checkBottles() {
-    this.level.collectableObjects = this.level.collectableObjects.filter(
-      (obj) => {
-        if (obj instanceof salsaBottle && this.character.isColliding(obj)) {
-          this.collectBottle();
-          return false;
-        }
-        return true;
-      }
-    );
-  }
-
-  /**
-   * Handles collecting a bottle.
-   * Plays collection sound, increments bottle count,
-   * and updates the bottle bar percentage.
-   */
-  collectBottle() {
-    if (!this.bottleCount) this.bottleCount = 0;
-
-    document.getElementById("bottle_collect").play();
-    this.bottleCount++;
-
-    let percentage = Math.min((this.bottleCount / 5) * 100, 100);
-    this.bottleBar.setPercentage(percentage);
-  }
-
-  /**
    * Checks if the character has reached the end of the level.
    * If so, starts a level transition to the next level.
    */
@@ -327,8 +274,8 @@ class World {
    */
   startLevelTransition() {
     clearInterval(this.gameInterval);
+    this.gameInterval = null;
     this.state = "level_transition";
-
     setTimeout(() => {
       if (this.level === level1) {
         initLevel2();
@@ -337,7 +284,6 @@ class World {
         initLevel3();
         this.level = level3;
       }
-
       this.character.x = 100;
       this.character.y = 180;
       this.camera_x = 0;
@@ -348,10 +294,11 @@ class World {
       } else {
         this.bossBar = null;
       }
-
       this.run();
     }, 3000);
   }
+
+  setLevelTimeout() {}
 
   /**
    * Adds all objects in the current level to the canvas for rendering.
@@ -382,20 +329,59 @@ class World {
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-    if (this.handleScreens()) return;
-
-    if (!this.level) {
-      requestAnimationFrame(() => this.draw());
-      return;
+    if (!this.handleScreens()) {
+      if (this.level) {
+        this.ctx.translate(this.camera_x, 0);
+        this.addAllObjects();
+        this.ctx.translate(-this.camera_x, 0);
+        this.addBars();
+      }
     }
 
-    this.ctx.translate(this.camera_x, 0);
-    this.addAllObjects();
-    this.ctx.translate(-this.camera_x, 0);
-
-    this.addBars();
-
     requestAnimationFrame(() => this.draw());
+  }
+
+  /**
+   * Draws the level transition screen.
+   * Displays the level number centered on a black background.
+   */
+  drawLevelTransition() {
+    drawLevelTransition(this.ctx, this.canvas, this.level, level1, level2);
+  }
+
+  /**
+   * Draws the title screen using the titleScreen object.
+   */
+  drawTitleScreen() {
+    drawTitleScreen(this.ctx, titleScreen);
+  }
+
+  /**
+   * Draws the win screen on the canvas.
+   */
+  drawWinScreen() {
+    drawWinScreen(this.ctx, this.canvas, this.winImg);
+  }
+
+  /**
+   * Draws the loose screen on the canvas.
+   */
+  drawLooseScreen() {
+    drawLooseScreen(this.ctx, this.canvas, this.looseImg);
+  }
+
+  /**
+   * Shows restart button in the win and lose screen.
+   */
+  showRestartButton() {
+    showRestartButton();
+  }
+
+  /**
+   * Clears all intervals.
+   */
+  clearAllIntervals() {
+    clearAllIntervals();
   }
 
   /**
@@ -407,73 +393,19 @@ class World {
     switch (this.state) {
       case "title":
         this.drawTitleScreen();
-        break;
+        return true;
       case "level_transition":
         this.drawLevelTransition();
-        break;
+        return true;
       case "lost":
         this.drawLooseScreen();
-        break;
+        return true;
       case "won":
         this.drawWinScreen();
-        break;
+        return true;
       default:
         return false;
     }
-
-    requestAnimationFrame(() => this.draw());
-    return true;
-  }
-
-  /**
-   * Draws the level transition screen.
-   * Displays the level number centered on a black background.
-   */
-  drawLevelTransition() {
-    this.ctx.fillStyle = "black";
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-    this.ctx.fillStyle = "#f5b05b";
-    this.ctx.font = "80px rye";
-    this.ctx.textAlign = "center";
-    this.ctx.textBaseline = "middle";
-
-    let levelText = "LEVEL ";
-    if (this.level === level1) levelText += "2";
-    else if (this.level === level2) levelText += "3";
-
-    this.ctx.fillText(levelText, this.canvas.width / 2, this.canvas.height / 2);
-  }
-
-  /**
-   * Draws the title screen using the titleScreen object.
-   */
-  drawTitleScreen() {
-    titleScreen.draw(this.ctx);
-  }
-
-  /**
-   * Draws the win screen on the canvas.
-   */
-  drawWinScreen() {
-    let img = new Image();
-    img.src = "img/You won, you lost/You Win A.png";
-
-    this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
-
-    document.getElementById("restartGame").style.display = "flex";
-  }
-
-  /**
-   * Draws the loose screen on the canvas.
-   */
-  drawLooseScreen() {
-    let img = new Image();
-    img.src = "img/You won, you lost/Game over A.png";
-
-    this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
-
-    document.getElementById("restartGame").style.display = "flex";
   }
 
   /**

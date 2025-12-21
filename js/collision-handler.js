@@ -122,6 +122,7 @@ class CollisionHandler {
 
     boss.hit();
     world.bossBar.setPercentage(boss.energy);
+    document.getElementById("boss_idle").play();
     bottle.break();
 
     if (boss.energy <= 0) {

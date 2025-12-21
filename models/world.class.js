@@ -426,7 +426,7 @@ class World {
   addToMap(mO) {
     if (mO.inverted) this.flipImage(mO);
     mO.draw(this.ctx);
-    mO.drawBorder(this.ctx);
+    /* mO.drawBorder(this.ctx); */
     if (mO.inverted) this.flipImageBack(mO);
   }
 

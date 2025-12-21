@@ -41,7 +41,7 @@ class drawableObject {
    * Only applied to specific game object types.
    * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
    */
-  drawBorder(ctx) {
+  /* drawBorder(ctx) {
     if (
       this instanceof Character ||
       this instanceof Chicken ||
@@ -56,5 +56,5 @@ class drawableObject {
       ctx.rect(this.x, this.y, this.width, this.height);
       ctx.stroke();
     }
-  }
-}
+  } */
+} 

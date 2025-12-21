@@ -1,12 +1,12 @@
-El Pollo Loco
+## El Pollo Loco
 
 A fun 2D platformer game where you play as Pepe, a brave character who must defeat enemies and collect items while facing off against the final boss!
 
-🎮 Game Overview
+## 🎮 Game Overview
 
 Navigate through three exciting levels, defeat chickens and baby chicks, collect coins and salsa bottles, and ultimately face the mighty boss in an epic showdown!
 
-🎯 Gameplay Features
+## 🎯 Gameplay Features
 
 Collectibles
 
@@ -26,7 +26,9 @@ Coin Bar 💰 - Displays collected coins (max 25)
 Bottle Bar 🍾 - Shows available bottles (max 5)
 Boss Bar 💀 - Appears when fighting the boss
 
-🏗️ Project Structure
+## 🏗️ Project Structure
+
+```text
 ├── index.html
 ├── js/
 │   ├── game.js                 # Main game initialization
@@ -45,8 +47,9 @@ Boss Bar 💀 - Appears when fighting the boss
 ├── img/                        # Game sprites and graphics
 ├── audio/                      # Sound effects and music
 └── styles/                     # CSS styling
+```
 
-🎨 Technical Details
+## 🎨 Technical Details
 
 Architecture
 
@@ -101,7 +104,7 @@ Defeat the boss by hitting it with salsa bottles until its health bar is deplete
 💀 Lose Condition
 If Pepe's health reaches zero from enemy collisions, the game is over.
 
-🔄 Features
+## 🔄 Features
 
 Three Progressive Levels - Increasing difficulty
 Dynamic Enemy Spawning - Safe spawn positions to avoid clustering

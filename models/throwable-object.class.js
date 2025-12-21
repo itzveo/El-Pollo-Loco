@@ -1,4 +1,4 @@
-class throwableObject extends movableObject { 
+class throwableObject extends movableObject {
   IMGS_BREAK = [
     "img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png",
     "img/6_salsa_bottle/bottle_rotation/bottle_splash/2_bottle_splash.png",
@@ -15,17 +15,23 @@ class throwableObject extends movableObject {
     "img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png",
   ];
 
+  /**
+   * Creates a new throwable object at the given position.
+   * Loads all required images and immediately starts the throw action.
+   * @param {number} x - The initial x-position of the object.
+   * @param {number} y - The initial y-position of the object.
+   */
   constructor(x, y) {
     super();
 
     this.loadImage("img/6_salsa_bottle/salsa_bottle.png");
 
-    this.IMGS_BREAK.forEach(path => { 
+    this.IMGS_BREAK.forEach((path) => {
       let img = new Image();
       img.src = path;
       this.imgCache[path] = img;
     });
-    this.IMGS_FLY.forEach(path => { 
+    this.IMGS_FLY.forEach((path) => {
       let img = new Image();
       img.src = path;
       this.imgCache[path] = img;
@@ -43,6 +49,11 @@ class throwableObject extends movableObject {
     this.throw();
   }
 
+  /**
+   * Starts the throwing movement of the object.
+   * Applies gravity, moves the object forward,
+   * and triggers the flying animation.
+   */
   throw() {
     this.speedY = 30;
     this.applyGravity();
@@ -54,6 +65,10 @@ class throwableObject extends movableObject {
     this.startFlyAnimation();
   }
 
+  /**
+   * Starts the flying animation while the object is in the air.
+   * Cycles through the flying images until the object breaks.
+   */
   startFlyAnimation() {
     let i = 0;
     this.flyInterval = setInterval(() => {
@@ -64,6 +79,11 @@ class throwableObject extends movableObject {
     }, 80);
   }
 
+  /**
+   * Triggers the breaking animation of the object.
+   * Stops all movement and animations, plays the splash animation,
+   * and marks the object for removal after the animation ends.
+   */
   break() {
     if (this.isBreaking) return;
 
@@ -81,8 +101,8 @@ class throwableObject extends movableObject {
       i++;
       if (i >= this.IMGS_BREAK.length) {
         clearInterval(this.breakInterval);
-        this.remove = true; 
+        this.remove = true;
       }
-    }, 80); 
+    }, 80);
   }
 }

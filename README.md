@@ -2,29 +2,32 @@
 
 A fun 2D platformer game where you play as Pepe, a brave character who must defeat enemies and collect items while facing off against the final boss!
 
+---
+
 ## 🎮 Game Overview
 
 Navigate through three exciting levels, defeat chickens and baby chicks, collect coins and salsa bottles, and ultimately face the mighty boss in an epic showdown!
 
+---
+
 ## 🎯 Gameplay Features
 
-Collectibles
+### 🪙 Collectibles
+- **Coins** – Collect up to 25 coins to fill your coin bar
+- **Salsa Bottles** – Collect up to 5 bottles to use as throwable weapons
 
-Coins  - Collect up to 25 coins to fill your coin bar
-Salsa Bottles - Collect up to 5 bottles to use as throwable weapons
+### 👾 Enemies
+- **Chickens 🐔** – Regular enemies that can be defeated with bottles
+- **Baby Chicks 🐤** – Smaller enemies
+- **Boss 👹** – Final challenge with multiple hit points
 
-Enemies
+### 🖥️ UI Elements
+- **Health Bar ❤️** – Shows Pepe's remaining health
+- **Coin Bar 💰** – Displays collected coins (max 25)
+- **Bottle Bar 🍾** – Shows available bottles (max 5)
+- **Boss Bar 💀** – Appears during the boss fight
 
-Chickens 🐔 - Regular enemies that can be defeated with bottles
-Baby Chicks 🐤 - Smaller enemies
-Boss 👹 - The final challenge with multiple hit points
-
-UI Elements
-
-Health Bar ❤️ - Shows Pepe's remaining health
-Coin Bar 💰 - Displays collected coins (max 25)
-Bottle Bar 🍾 - Shows available bottles (max 5)
-Boss Bar 💀 - Appears when fighting the boss
+---
 
 ## 🏗️ Project Structure
 
@@ -51,14 +54,14 @@ Boss Bar 💀 - Appears when fighting the boss
 
 ## 🎨 Technical Details
 
-Architecture
+### Architecture
 
 Object-Oriented Design - Clean class structure for all game entities
 Modular System - Separate handlers for collisions and collectables
 Canvas Rendering - HTML5 Canvas for smooth 2D graphics
 Animation System - Sprite-based animations for characters and objects
 
-Key Classes
+### Key Classes
 
 World - Main game world controller
 Character - Player character with movement and combat
@@ -67,13 +70,13 @@ CollectableHandler - Handles item collection logic
 MovableObject - Base class for all animated objects
 Level - Level configuration and enemy placement
 
-🚀 Getting Started
+### 🚀 Getting Started
 
 Clone or download the repository
 Open index.html in a modern web browser
 Click "Start Game" and enjoy!
 
-🎵 Audio
+### 🎵 Audio
 
 The game features:
 
@@ -81,7 +84,7 @@ Background music
 Sound effects for jumping, collecting items, and combat
 Victory and game over themes
 
-📝 Game States
+### 📝 Game States
 
 Title Screen - Main menu
 Playing - Active gameplay
@@ -89,7 +92,7 @@ Level Transition - Between levels
 Won - Victory screen after defeating the boss
 Lost - Game over screen when health reaches zero
 
-🛠️ Development
+### 🛠️ Development
 
 Built with:
 
@@ -113,8 +116,8 @@ Visual Feedback - Health, coin, and bottle bars
 Sound Integration - Full audio experience
 Restart Functionality - Quick restart after win/lose
 
-📜 License
+### 📜 License
 This project is for educational purposes.
 
-🎮 Have Fun!
+### 🎮 Have Fun!
 Enjoy playing El Pollo Loco and good luck defeating the boss!

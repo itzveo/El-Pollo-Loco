@@ -12,7 +12,7 @@ Navigate through three exciting levels, defeat chickens and baby chicks, collect
 
 ## 🎯 Gameplay Features
 
-### 🪙 Collectibles
+### 📦 Collectibles
 - **Coins** – Collect up to 25 coins to fill your coin bar
 - **Salsa Bottles** – Collect up to 5 bottles to use as throwable weapons
 

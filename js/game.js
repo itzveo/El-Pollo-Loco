@@ -5,6 +5,12 @@ let music = document.getElementById("music");
 let over = document.getElementById("game_over");
 let win = document.getElementById("you_win");
 let bossHit = document.getElementById("boss_idle");
+
+const muteBtn = document.getElementById("muteSound");
+const unmuteBtn = document.getElementById("enableSound");
+
+const allAudio = document.querySelectorAll("audio");
+
 bossHit.volume = 0.1;
 music.volume = 0.1;
 over.volume = 0.3;
@@ -131,11 +137,6 @@ function showRestartButton() {
 function clearAllIntervals() {
   for (let i = 1; i < 9999; i++) window.clearInterval(i);
 }
-
-const muteBtn = document.getElementById("muteSound");
-const unmuteBtn = document.getElementById("enableSound");
-
-const allAudio = document.querySelectorAll("audio");
 
 /**
  * Sets the global mute state for all audio elements.

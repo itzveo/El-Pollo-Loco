@@ -82,6 +82,8 @@ class CollisionHandler {
    */
   static handleBreakingBottle(bottle) {
     if (bottle.isBreaking) {
+      swoosh.pause();
+      swoosh.currentTime = 0;
       document.getElementById("bottle_breaking").play();
       return true;
     }
@@ -122,7 +124,7 @@ class CollisionHandler {
 
     boss.hit();
     world.bossBar.setPercentage(boss.energy);
-    document.getElementById("boss_idle").play();
+    bossHit.play();
     bottle.break();
 
     if (boss.energy <= 0) {
@@ -141,6 +143,7 @@ class CollisionHandler {
       world.state = "won";
       if (!world.winPlayed) {
         music.pause();
+        bossHit.pause();
         win.currentTime = 0;
         win.play();
         world.winPlayed = true;

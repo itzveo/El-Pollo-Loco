@@ -32,10 +32,6 @@ h1 {
   margin: 32px;
 }
 
-h2 {
-  text-shadow: #000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px,#000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px;
-}
-
 a {
   text-decoration: none;
   color: #f5b05b;
@@ -52,7 +48,7 @@ a:hover {
   padding-inline: 32px;
   width: 80%;
   overflow-y: auto;
-  text-shadow: #000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px;
+  text-shadow: #000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px;
 }
 
 .main::-webkit-scrollbar {
@@ -73,5 +69,13 @@ a:hover {
 @media (max-height: 720px) {
   h1 {
     font-size: 78px;
+  }
+}
+
+@media (min-width: 1980px) {
+  .main {
+    width: 720px;
+    transform: scale(2);
+    transform-origin: top center;
   }
 }

@@ -52,8 +52,7 @@ class movableObject extends drawableObject {
    * Updates lastHit timestamp if still alive.
    */
   isDamaged() {
-    this.energy -= 20;
-
+    this.energy -= 10;
     if (this.energy <= 0) {
       this.energy = 0;
       if (this.die) this.die();

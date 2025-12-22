@@ -5,12 +5,16 @@ let music = document.getElementById("music");
 let over = document.getElementById("game_over");
 let win = document.getElementById("you_win");
 let bossHit = document.getElementById("boss_idle");
+let jump = document.getElementById("jump");
+let swoosh = document.getElementById("swoosh");
 
 const muteBtn = document.getElementById("muteSound");
 const unmuteBtn = document.getElementById("enableSound");
 
 const allAudio = document.querySelectorAll("audio");
 
+swoosh.volume = 0.2;
+jump.volume = 0.1;
 bossHit.volume = 0.1;
 music.volume = 0.1;
 over.volume = 0.3;
@@ -189,10 +193,18 @@ document.addEventListener("DOMContentLoaded", () => {
 window.addEventListener("keydown", (e) => {
   if (e.keyCode == 32) {
     keyboard.SPACE = true;
+    if (world.state === "playing") {
+      jump.play();
+      this.jump.currentTime = 0;
+    } else return;
   }
 
   if (e.keyCode == 38) {
     keyboard.UP = true;
+    if (world.state === "playing") {
+      jump.play();
+      this.jump.currentTime = 0;
+    } else return;
   }
 
   if (e.keyCode == 40) {

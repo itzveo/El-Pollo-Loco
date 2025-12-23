@@ -8,6 +8,13 @@ class movableObject extends drawableObject {
   lastHit = 0;
   groundY = 230;
 
+  hitbox = {
+    offsetX: 10,
+    offsetY: 10,
+    width: 0,
+    height: 0,
+  };
+
   /**
    * Applies gravity to the object.
    * Updates vertical position (y) and vertical speed (speedY)
@@ -23,6 +30,30 @@ class movableObject extends drawableObject {
         this.speedY = 0;
       }
     }, 1000 / 60);
+  }
+
+  /**
+   * Updates the object's hitbox based on its current size.
+   * The hitbox is intentionally smaller and centered
+   * to allow more precise collision detection.
+   */
+  updateHitbox() {
+    this.hitbox.width = this.width - 20;
+    this.hitbox.height = this.height - 20;
+  }
+
+  /**
+   * Returns the absolute hitbox rectangle in world coordinates.
+   * @returns {{x: number, y: number, width: number, height: number}}
+   * An object representing the hitbox position and size.
+   */
+  getHitbox() {
+    return {
+      x: this.x + this.hitbox.offsetX,
+      y: this.y + this.hitbox.offsetY,
+      width: this.hitbox.width,
+      height: this.hitbox.height,
+    };
   }
 
   /**
@@ -45,6 +76,37 @@ class movableObject extends drawableObject {
       this.x < mO.x &&
       this.y < mO.y + mO.height
     );
+  }
+
+  /**
+   * Checks whether this object's hitbox is touching another object's hitbox.
+   * Uses a tolerance value to avoid false positives caused by minimal overlap.
+   * @param {movableObject} mO - The other movable object to check collision with.
+   * @param {number} [tolerance=5] - Allowed overlap in pixels before a collision is detected.
+   * @returns {boolean} True if the hitboxes are touching, otherwise false.
+   */
+  isHitboxTouching(mO, tolerance = 5) {
+    const a = this.getHitbox();
+    const b = mO.getHitbox();
+
+    return (
+      a.x + a.width - tolerance >= b.x &&
+      a.x + tolerance <= b.x + b.width &&
+      a.y + a.height - tolerance >= b.y &&
+      a.y + tolerance <= b.y + b.height
+    );
+  }
+
+  /**
+   * Draws the object's hitbox on the canvas.
+   * Intended for debugging purposes to visualize
+   * collision boundaries during development.
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+   */
+  drawHitbox(ctx) {
+    const hb = this.getHitbox();
+    ctx.strokeStyle = "red";
+    ctx.strokeRect(hb.x, hb.y, hb.width, hb.height);
   }
 
   /**

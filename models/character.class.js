@@ -81,6 +81,12 @@ class Character extends movableObject {
    */
   constructor() {
     super().loadImage("img/2_character_pepe/1_idle/idle/I-1.png");
+    this.hitbox = {
+      offsetX: 10,
+      offsetY: 80,
+      width: this.width - 100,
+      height: this.height - 70,
+    };
     this.loadImgs(this.IMGS_WALKING);
     this.loadImgs(this.IMGS_JUMPING);
     this.loadImgs(this.IMGS_HURT);
@@ -216,6 +222,9 @@ class Character extends movableObject {
     }, 50);
   }
 
+  /**
+   * Kills the player and stops all movement.
+   */
   die() {
     this.dead = true;
     this.speed = 0;

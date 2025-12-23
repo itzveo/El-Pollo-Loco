@@ -425,8 +425,13 @@ class World {
    */
   addToMap(mO) {
     if (mO.inverted) this.flipImage(mO);
+    if (typeof mO.updateHitbox === "function") {
+      mO.updateHitbox();
+    }
     mO.draw(this.ctx);
-    /* mO.drawBorder(this.ctx); */
+    if (typeof mO.drawHitbox === "function") {
+      mO.drawHitbox(this.ctx);
+    }
     if (mO.inverted) this.flipImageBack(mO);
   }
 

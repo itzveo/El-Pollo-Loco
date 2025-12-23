@@ -12,7 +12,7 @@ class CollisionHandler {
    */
   static checkCollisions(world) {
     world.level.enemies.forEach((enemy) => {
-      if (world.character.isColliding(enemy) && !world.character.dead) {
+      if (world.character.isHitboxTouching(enemy, 6) && !world.character.dead) {
         world.character.isDamaged();
         document.getElementById("player_hurt").play();
         world.hpBar.setPercentage(world.character.energy);
@@ -101,7 +101,7 @@ class CollisionHandler {
     let hitEnemy = false;
     world.level.enemies.forEach((enemy) => {
       if (!(enemy instanceof Chicken) && !(enemy instanceof Baby)) return;
-      if (!enemy.dead && bottle.isColliding(enemy)) {
+      if (!enemy.dead && bottle.isHitboxTouching(enemy, 10)) {
         if (enemy.die) enemy.die();
         bottle.break();
         document.getElementById("bottle_breaking").play();

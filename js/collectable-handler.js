@@ -1,4 +1,3 @@
-
 /**
  * Collectable Handler Module
  * Handles all collectable object logic (coins and bottles) separately from the World class
@@ -7,13 +6,11 @@
 class CollectableHandler {
   /**
    * Checks if the character collects any coins.
-   * Removes collected coins and updates coin bar based on total coins collected.
-   * @param {World} world - The world instance containing game state
    */
   static checkCoins(world) {
     world.level.collectableObjects = world.level.collectableObjects.filter(
       (obj) => {
-        if (obj instanceof coin && world.character.isColliding(obj)) {
+        if (obj instanceof coin && world.character.isHitboxTouching(obj, 8)) {
           this.collectCoin(world);
           return false;
         }
@@ -24,8 +21,6 @@ class CollectableHandler {
 
   /**
    * Handles collecting a coin.
-   * Plays sound, increments coin count, and updates coin bar.
-   * @param {World} world - The world instance
    */
   static collectCoin(world) {
     if (!world.coinCount) world.coinCount = 0;
@@ -41,13 +36,14 @@ class CollectableHandler {
 
   /**
    * Checks if the character collects any salsa bottles.
-   * Removes collected bottles and updates the bottle bar.
-   * @param {World} world - The world instance containing game state
    */
   static checkBottles(world) {
     world.level.collectableObjects = world.level.collectableObjects.filter(
       (obj) => {
-        if (obj instanceof salsaBottle && world.character.isColliding(obj)) {
+        if (
+          obj instanceof salsaBottle &&
+          world.character.isHitboxTouching(obj, 8)
+        ) {
           this.collectBottle(world);
           return false;
         }
@@ -58,9 +54,6 @@ class CollectableHandler {
 
   /**
    * Handles collecting a bottle.
-   * Plays collection sound, increments bottle count,
-   * and updates the bottle bar percentage.
-   * @param {World} world - The world instance
    */
   static collectBottle(world) {
     if (!world.bottleCount) world.bottleCount = 0;

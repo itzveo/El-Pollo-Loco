@@ -84,6 +84,24 @@ class Baby extends movableObject {
   }
 
   /**
+   * Returns the enemy's head collision zone
+   */
+  getHeadHitbox() {
+    return {
+      x: this.x + this.width * 0.3,
+      y: this.y,
+      width: this.width * 0.4,
+      height: this.height * 0.2,
+    };
+  }
+
+  drawHeadHitbox(ctx) {
+    const hb = this.getHeadHitbox();
+    ctx.strokeStyle = "green";
+    ctx.strokeRect(hb.x, hb.y, hb.width, hb.height);
+  }
+
+  /**
    * Kills the baby enemy.
    * Stops movement, plays death sound,
    * and marks the object for removal.

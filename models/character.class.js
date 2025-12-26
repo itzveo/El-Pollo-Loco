@@ -204,6 +204,11 @@ class Character extends movableObject {
         return;
       }
 
+      if (this.isDead()) {
+        this.playAnimation(this.IMGS_DEAD);
+        return;
+      }
+
       if (this.IsAboveGround()) {
         this.playAnimation(this.IMGS_JUMPING);
         return;
@@ -220,6 +225,21 @@ class Character extends movableObject {
 
       this.loadImage("img/2_character_pepe/1_idle/idle/I-1.png");
     }, 50);
+  }
+
+  getFootHitbox() {
+    return {
+      x: this.x + this.width * 0.4,
+      y: this.y + this.height * 0.9,
+      width: this.width * 0.2,
+      height: this.height * 0.1,
+    };
+  }
+
+  drawFootHitbox(ctx) {
+    const hb = this.getFootHitbox();
+    ctx.strokeStyle = "blue";
+    ctx.strokeRect(hb.x, hb.y, hb.width, hb.height);
   }
 
   /**

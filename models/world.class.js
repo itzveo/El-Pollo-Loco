@@ -166,7 +166,7 @@ class World {
       this.checkBottles();
       this.checkThrowableObjects();
       this.checkLevelEnd();
-    }, 100);
+    }, 1000 / 60);
   }
 
   /**
@@ -429,9 +429,17 @@ class World {
       mO.updateHitbox();
     }
     mO.draw(this.ctx);
+
     if (typeof mO.drawHitbox === "function") {
       mO.drawHitbox(this.ctx);
     }
+    if (typeof mO.drawFootHitbox === "function") {
+      mO.drawFootHitbox(this.ctx);
+    }
+    if (typeof mO.drawHeadHitbox === "function") {
+      mO.drawHeadHitbox(this.ctx);
+    }
+
     if (mO.inverted) this.flipImageBack(mO);
   }
 

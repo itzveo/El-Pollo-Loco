@@ -4,25 +4,52 @@
  */
 
 class CollisionHandler {
-  /**
-   * Checks collisions between the player and enemies.
-   * If a collision occurs, the player takes damage and the health bar is updated.
-   * If energy reaches 0, sets state to "lost".
-   * @param {World} world - The world instance containing game state
-   */
   static checkCollisions(world) {
-    world.level.enemies.forEach((enemy) => {
-      if (world.character.isHitboxTouching(enemy, 6) && !world.character.dead) {
-        world.character.isDamaged();
-        document.getElementById("player_hurt").play();
-        world.hpBar.setPercentage(world.character.energy);
+  world.level.enemies.forEach((enemy) => {
+    this.handleEnemyCollision(world, enemy);
+  });
+}
 
-        if (world.character.energy === 0) {
-          this.handlePlayerDeath(world);
-        }
-      }
-    });
+static handleEnemyCollision(world, enemy) {
+  const player = world.character;
+  if (enemy.dead || player.dead) return;
+
+  if (this.isHeadStomp(player, enemy)) {
+    enemy.die();
+    player.jump();
+    player.speedY = 25;
+    return;
   }
+
+  if (!player.IsAboveGround() && player.isHitboxTouching(enemy, 6)) {
+    this.handlePlayerDamage(world, player);
+  }
+}
+
+static isHeadStomp(player, enemy) {
+  return (
+    player.speedY < 0 &&
+    movableObject.hitboxesOverlap(
+      player.getFootHitbox(),
+      enemy.getHeadHitbox()
+    )
+  );
+}
+
+static handleHeadStomp(player, enemy) {
+  enemy.die();
+  player.jump();
+}
+
+static handlePlayerDamage(world, player) {
+  player.isDamaged();
+  document.getElementById("player_hurt").play();
+  world.hpBar.setPercentage(player.energy);
+
+  if (player.energy === 0) {
+    this.handlePlayerDeath(world);
+  }
+}
 
   /**
    * Handles the player's death.

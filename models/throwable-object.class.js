@@ -63,6 +63,7 @@ class throwableObject extends movableObject {
     }, 25);
 
     this.startFlyAnimation();
+    swoosh.play();
   }
 
   /**

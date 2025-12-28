@@ -124,9 +124,9 @@ class movableObject extends drawableObject {
    */
   isDamaged() {
     this.energy -= 10;
+
     if (this.energy <= 0) {
       this.energy = 0;
-      if (this.die) this.die();
     } else {
       this.lastHit = new Date().getTime();
     }
@@ -179,6 +179,7 @@ class movableObject extends drawableObject {
    * Initiates a jump by setting the vertical speed.
    */
   jump() {
+    if (this.dead) return;
     this.speedY = 35;
   }
 }

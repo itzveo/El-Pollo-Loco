@@ -5,6 +5,8 @@ class Character extends movableObject {
   groundY = 230;
   world;
   speed = 10;
+  invincible = false;
+  invincibleTime = 200;
   idleTime = 0;
   idleThreshold = 1000;
   sleepThreshold = 5000;
@@ -112,6 +114,8 @@ class Character extends movableObject {
    */
   move() {
     setInterval(() => {
+      if (this.dead) return;
+
       if (!this.world || !this.world.level) return;
 
       this.updateIdleTime();
@@ -192,20 +196,11 @@ class Character extends movableObject {
   showImgs() {
     setInterval(() => {
       if (this.dead) {
-        if (!this.deathAnimationPlayed) {
-          this.playAnimation(this.IMGS_DEAD);
-          this.deathAnimationPlayed = true;
-        }
         return;
       }
 
       if (this.isHurt()) {
         this.playAnimation(this.IMGS_HURT);
-        return;
-      }
-
-      if (this.isDead()) {
-        this.playAnimation(this.IMGS_DEAD);
         return;
       }
 
@@ -227,15 +222,24 @@ class Character extends movableObject {
     }, 50);
   }
 
+  /**
+   * Calculates and returns the player's foot hitbox.
+   * Used for precise collision detection with enemies.
+   * @returns {{x:number, y:number, width:number, height:number}} The foot hitbox.
+   */
   getFootHitbox() {
     return {
-      x: this.x + this.width * 0.4,
-      y: this.y + this.height * 0.9,
-      width: this.width * 0.2,
-      height: this.height * 0.1,
+      x: this.x + this.width * 0.3,
+      y: this.y + this.height * 0.85,
+      width: this.width * 0.4,
+      height: this.height * 0.15,
     };
   }
 
+  /**
+   * Draws the player's foot hitbox for debugging purposes.
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+   */
   drawFootHitbox(ctx) {
     const hb = this.getFootHitbox();
     ctx.strokeStyle = "blue";
@@ -243,11 +247,62 @@ class Character extends movableObject {
   }
 
   /**
+   * Applies damage effects to the player and starts invincibility frames.
+   */
+  takeDamage() {
+    this.isDamaged();
+    this.startInvincibility();
+  }
+
+  /**
+   * Checks whether the player is currently able to take damage.
+   * @returns {boolean} True if the player can take damage.
+   */
+  canTakeDamage() {
+    return !this.invincible && !this.dead;
+  }
+
+  /**
+   * Activates temporary invincibility for the player.
+   * Prevents taking damage for a defined duration.
+   */
+  startInvincibility() {
+    this.invincible = true;
+    setTimeout(() => {
+      this.invincible = false;
+    }, this.invincibleTime);
+  }
+
+  /**
+   * Plays the player's death animation frame by frame.
+   * Executes a callback function once the animation is finished.
+   * @param {Function} [onFinished] - Optional callback after animation ends.
+   */
+  playDeathAnimation(onFinished) {
+    let index = 0;
+    const interval = setInterval(() => {
+      this.loadImage(this.IMGS_DEAD[index]);
+      index++;
+
+      if (index >= this.IMGS_DEAD.length) {
+        clearInterval(interval);
+        if (onFinished) onFinished();
+      }
+    }, 150);
+  }
+
+  /**
    * Kills the player and stops all movement.
    */
-  die() {
+  die(onDeathFinished) {
+    if (this.dead) return;
+
     this.dead = true;
     this.speed = 0;
     this.speedY = 0;
+
+    this.playDeathAnimation(() => {
+      if (onDeathFinished) onDeathFinished();
+    });
   }
 }

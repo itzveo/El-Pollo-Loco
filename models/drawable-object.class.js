@@ -22,6 +22,7 @@ class drawableObject {
    */
   draw(ctx) {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+    if (!this.visible) return;
   }
 
   /**
@@ -35,26 +36,4 @@ class drawableObject {
       this.imgCache[path] = img;
     });
   }
-
-  /**
-   * Draws a debug collision border around the object.
-   * Only applied to specific game object types.
-   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
-   */
-  /* drawBorder(ctx) {
-    if (
-      this instanceof Character ||
-      this instanceof Chicken ||
-      this instanceof Baby ||
-      this instanceof Boss ||
-      this instanceof coin ||
-      this instanceof salsaBottle
-    ) {
-      ctx.beginPath();
-      ctx.lineWidth = "5";
-      ctx.strokeStyle = "blue";
-      ctx.rect(this.x, this.y, this.width, this.height);
-      ctx.stroke();
-    }
-  } */
 } 

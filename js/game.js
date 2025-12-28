@@ -191,6 +191,8 @@ document.addEventListener("DOMContentLoaded", () => {
  * Sets movement and action flags on the keyboard object.
  */
 window.addEventListener("keydown", (e) => {
+  if (!world.character || world.character.dead) return;
+  
   if (e.keyCode == 32) {
     keyboard.SPACE = true;
     if (world.state === "playing") {

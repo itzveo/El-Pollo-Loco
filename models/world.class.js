@@ -9,6 +9,7 @@ class World {
 
   state = "title";
   level = null;
+  throwCooldown = false;
 
   ctx;
   canvas;
@@ -237,18 +238,23 @@ class World {
    * Updates the bottle bar percentage accordingly.
    */
   checkThrowableObjects() {
-    if (this.keyboard.THROW && this.bottleCount > 0) {
+    if (this.keyboard.THROW && this.bottleCount > 0 && !this.throwCooldown) {
+      this.throwCooldown = true;
+
       let bottle = new throwableObject(
         this.character.x + 100,
         this.character.y + 100
       );
 
       this.throwableObjects.push(bottle);
-
       this.bottleCount--;
 
       let percentage = (this.bottleCount / 5) * 100;
       this.bottleBar.setPercentage(percentage);
+    }
+
+    if (!this.keyboard.THROW) {
+      this.throwCooldown = false;
     }
   }
 
@@ -311,10 +317,7 @@ class World {
     this.addObjectsToMap(this.throwableObjects);
     this.addObjectsToMap(this.level.collectableObjects);
     this.addObjectsToMap(this.level.enemies);
-
-    if (!this.character.dead) {
-      this.addToMap(this.character);
-    }
+    this.addToMap(this.character);
 
     if (this.level.boss && this.bossBar) {
       this.addToMap(this.bossBar);
@@ -430,7 +433,7 @@ class World {
     }
     mO.draw(this.ctx);
 
-    if (typeof mO.drawHitbox === "function") {
+    /* if (typeof mO.drawHitbox === "function") {
       mO.drawHitbox(this.ctx);
     }
     if (typeof mO.drawFootHitbox === "function") {
@@ -438,7 +441,7 @@ class World {
     }
     if (typeof mO.drawHeadHitbox === "function") {
       mO.drawHeadHitbox(this.ctx);
-    }
+    } */
 
     if (mO.inverted) this.flipImageBack(mO);
   }

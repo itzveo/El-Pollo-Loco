@@ -7,12 +7,14 @@ let win = document.getElementById("you_win");
 let bossHit = document.getElementById("boss_idle");
 let jump = document.getElementById("jump");
 let swoosh = document.getElementById("swoosh");
+let sleep = document.getElementById("sleep");
 
 const muteBtn = document.getElementById("muteSound");
 const unmuteBtn = document.getElementById("enableSound");
 
 const allAudio = document.querySelectorAll("audio");
 
+sleep.volume = 0.3;
 swoosh.volume = 0.2;
 jump.volume = 0.1;
 bossHit.volume = 0.1;

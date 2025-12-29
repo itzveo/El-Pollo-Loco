@@ -4,21 +4,21 @@ function initLevel3() {
   const enemies = [];
   const collectables = [];
 
-  enemies.push(new Chicken(enemies, world));
-  enemies.push(new Chicken(enemies, world));
-  enemies.push(new Chicken(enemies, world));
+  for (let i = 0; i < 3; i++) {
+    enemies.push(new Chicken(enemies, world));
+  }
 
-  enemies.push(new Baby(enemies, world));
-  enemies.push(new Baby(enemies, world));
-  enemies.push(new Baby(enemies, world));
+  for (let i = 0; i < 5; i++) {
+    enemies.push(new Baby(enemies, world));
+  }
 
-  collectables.push(new salsaBottle(collectables, world));
-  collectables.push(new salsaBottle(collectables, world));
-  collectables.push(new salsaBottle(collectables, world));
+  for (let i = 0; i < 5; i++) {
+    collectables.push(new salsaBottle(collectables, world));
+  }
 
-  collectables.push(new coin(collectables, world));
-  collectables.push(new coin(collectables, world));
-  collectables.push(new coin(collectables, world));
+  for (let i = 0; i < 5; i++) {
+    collectables.push(new coin(collectables, world));
+  }
 
   const boss = new Boss();
   enemies.push(boss);

@@ -202,7 +202,7 @@ canvas {
   pointer-events: none;
 }
 
-@media only screen and (max-width: 960px) {
+@media only screen and (max-width: 1000px) {
   canvas {
     width: 100%;
   }
@@ -211,9 +211,6 @@ canvas {
   }
   .hud {
     width: 100%;
-  }
-  .btn-wrapper-bot {
-    display: flex;
   }
 }
 
@@ -229,7 +226,7 @@ canvas {
   }
 }
 
-@media screen and (max-width: 720px) and (orientation: portrait) {
+@media screen and (max-width: 1024px) and (orientation: portrait) {
   .turn-dialog {
     display: flex;
   }
@@ -237,6 +234,12 @@ canvas {
 
 @media (min-height: 1080px) and (min-width: 1080px) {
   .controls {
+    display: flex;
+  }
+}
+
+@media (max-height: 1080px) and (max-width: 1380px) {
+  .btn-wrapper-bot {
     display: flex;
   }
 }

@@ -10,6 +10,7 @@ class Character extends movableObject {
   idleTime = 0;
   idleThreshold = 1000;
   sleepThreshold = 5000;
+  isSleeping = false;
   dead = false;
   deathAnimationPlayed = false;
 
@@ -63,6 +64,8 @@ class Character extends movableObject {
     "img/2_character_pepe/1_idle/idle/I-10.png",
   ];
 
+  IMG_IDLE = ["img/2_character_pepe/1_idle/idle/I-1.png"];
+
   IMGS_SLEEP = [
     "img/2_character_pepe/1_idle/long_idle/I-11.png",
     "img/2_character_pepe/1_idle/long_idle/I-12.png",
@@ -84,10 +87,10 @@ class Character extends movableObject {
   constructor() {
     super().loadImage("img/2_character_pepe/1_idle/idle/I-1.png");
     this.hitbox = {
-      offsetX: 10,
-      offsetY: 80,
-      width: this.width - 100,
-      height: this.height - 70,
+      offsetX: 30,
+      offsetY: 90,
+      width: this.width - 80,
+      height: this.height - 80,
     };
     this.loadImgs(this.IMGS_WALKING);
     this.loadImgs(this.IMGS_JUMPING);
@@ -152,6 +155,7 @@ class Character extends movableObject {
 
     if (k.RIGHT || k.LEFT || k.UP || k.SPACE || k.THROW) {
       this.idleTime = 0;
+      this.stopSleepSound();
     } else {
       this.idleTime += 1000 / 60;
     }
@@ -174,19 +178,43 @@ class Character extends movableObject {
    * @returns {boolean} True if an idle animation was played.
    */
   handleIdleAnimations() {
+    if (this.world.state !== "playing") {
+      this.stopSleepSound();
+      return false;
+    }
+
     const state = this.getIdleState();
 
     if (state === "sleep") {
+      if (!this.isSleeping) {
+        this.isSleeping = true;
+        sleep.currentTime = 0;
+        sleep.play();
+      }
+
       this.playAnimation(this.IMGS_SLEEP);
       return true;
     }
 
     if (state === "idle") {
+      this.stopSleepSound();
       this.playAnimation(this.IMGS_IDLE);
       return true;
     }
 
+    this.stopSleepSound();
     return false;
+  }
+
+  /**
+   * Stops and resets the sleep sound.
+   */
+  stopSleepSound() {
+    if (this.isSleeping) {
+      sleep.pause();
+      sleep.currentTime = 0;
+      this.isSleeping = false;
+    }
   }
 
   /**
@@ -218,8 +246,18 @@ class Character extends movableObject {
         return;
       }
 
-      this.loadImage("img/2_character_pepe/1_idle/idle/I-1.png");
+      this.playAnimation(this.IMG_IDLE);
     }, 50);
+  }
+
+  /**
+   * Updates the object's hitbox based on its current size.
+   * The hitbox is intentionally smaller and centered
+   * to allow more precise collision detection.
+   */
+  updateHitbox() {
+    this.hitbox.width = this.width - 70;
+    this.hitbox.height = this.height - 90;
   }
 
   /**

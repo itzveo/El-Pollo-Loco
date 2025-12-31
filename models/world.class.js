@@ -169,7 +169,22 @@ class World {
       this.checkBottles();
       this.checkThrowableObjects();
       this.checkLevelEnd();
+      this.checkBossArena();
     }, 1000 / 60);
+  }
+
+  /**
+   * Activates the boss fight arena when the player reaches
+   * the defined trigger position in level 3.
+   * Prevents the player from leaving the boss area once active.
+   */
+  checkBossArena() {
+    if (this.level !== level3) return;
+    if (!this.level.boss) return;
+
+    if (this.character.x >= this.level.bossTriggerX) {
+      this.level.bossFightActive = true;
+    }
   }
 
   /**
@@ -437,7 +452,7 @@ class World {
     }
     mO.draw(this.ctx);
 
-    if (typeof mO.drawHitbox === "function") {
+    /* if (typeof mO.drawHitbox === "function") {
       mO.drawHitbox(this.ctx);
     }
     if (typeof mO.drawFootHitbox === "function") {
@@ -445,7 +460,7 @@ class World {
     }
     if (typeof mO.drawHeadHitbox === "function") {
       mO.drawHeadHitbox(this.ctx);
-    }
+    } */
 
     if (mO.inverted) this.flipImageBack(mO);
   }

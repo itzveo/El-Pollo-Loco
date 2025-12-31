@@ -26,4 +26,8 @@ function initLevel3() {
   level3 = new Level(enemies, [new Cloud()], loopBgs(), collectables);
 
   level3.boss = boss;
+
+  level3.bossTriggerX = 7200;   
+  level3.bossArenaLeft = 7000;  
+  level3.bossFightActive = false;
 }

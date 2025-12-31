@@ -13,6 +13,10 @@ class CollisionHandler {
     world.level.enemies.forEach((enemy) => {
       this.handleEnemyCollision(world, enemy);
     });
+
+    if (world.level.boss) {
+      this.handleBossCollision(world, world.level.boss);
+    }
   }
 
   /**
@@ -26,7 +30,7 @@ class CollisionHandler {
     if (enemy.dead || player.dead) return;
 
     if (
-      typeof enemy.getHeadHitbox === "function" &&
+      (enemy instanceof Chicken || enemy instanceof Baby) &&
       this.isHeadStomp(player, enemy)
     ) {
       enemy.die();
@@ -35,7 +39,41 @@ class CollisionHandler {
       return;
     }
 
-    if (!player.IsAboveGround() && player.isHitboxTouching(enemy, 6)) {
+    if (player.isHitboxTouching(enemy, 6)) {
+      this.handlePlayerDamage(world, player);
+    }
+  }
+
+  /**
+   * Handles all collision logic between the player character and the boss.
+   * Checks for head stomp damage, applies damage to the boss,
+   * updates the boss health bar, triggers player bounce,
+   * handles boss defeat, and applies damage to the player on body collision.
+   * @param {World} world - The current game world instance.
+   * @param {Boss} boss - The boss enemy instance.
+   */
+  static handleBossCollision(world, boss) {
+    const player = world.character;
+    if (boss.dead || player.dead) return;
+
+    if (this.isBossHeadStomp(player, boss)) {
+      if (boss.state === "attack") {
+        boss.takeDamage();
+      } else {
+        boss.hit();
+      }
+
+      world.bossBar.setPercentage(boss.energy);
+      player.jump();
+      player.speedY = 25;
+
+      if (boss.energy <= 0) {
+        this.handleBossDefeat(world);
+      }
+      return;
+    }
+
+    if (player.isHitboxTouching(boss, 6)) {
       this.handlePlayerDamage(world, player);
     }
   }
@@ -54,6 +92,24 @@ class CollisionHandler {
       movableObject.hitboxesOverlap(
         player.getFootHitbox(),
         enemy.getHeadHitbox()
+      )
+    );
+  }
+
+  /**
+   * Determines whether the player performs a head stomp on the boss.
+   * A head stomp occurs when the player is moving downward and the foot hitbox
+   * overlaps the boss head hitbox.
+   * @param {Object} player - The player character.
+   * @param {Object} boss - The boss being checked.
+   * @returns {boolean} True if the collision is a valid head stomp.
+   */
+  static isBossHeadStomp(player, boss) {
+    return (
+      player.speedY < 0 &&
+      movableObject.hitboxesOverlap(
+        player.getFootHitbox(),
+        boss.getHeadHitbox()
       )
     );
   }
@@ -184,7 +240,15 @@ class CollisionHandler {
    */
   static checkBossCollision(world, bottle) {
     const boss = world.level.boss;
-    if (!boss || boss.dead || !bottle.isColliding(boss)) return false;
+
+    if (
+      !boss ||
+      boss.dead ||
+      boss.state !== "alert" ||
+      !bottle.isColliding(boss)
+    ) {
+      return false;
+    }
 
     boss.hit();
     world.bossBar.setPercentage(boss.energy);

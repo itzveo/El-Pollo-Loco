@@ -147,6 +147,23 @@ class Character extends movableObject {
   }
 
   /**
+   * Makes the Player move to left with a restriction when he is in the boss zone.
+   */
+  moveLeft() {
+    this.x -= this.speed;
+
+    const level = this.world.level;
+
+    if (
+      level === level3 &&
+      level.bossFightActive &&
+      this.x < level.bossArenaLeft
+    ) {
+      this.x = level.bossArenaLeft;
+    }
+  }
+
+  /**
    * Tracks how long the player has been idle.
    * Resets the idle timer when any movement or action key is pressed.
    */

@@ -95,6 +95,10 @@ class Baby extends movableObject {
     };
   }
 
+  /**
+   * Draws the head hitbox from the collision system
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+   */
   drawHeadHitbox(ctx) {
     const hb = this.getHeadHitbox();
     ctx.strokeStyle = "green";

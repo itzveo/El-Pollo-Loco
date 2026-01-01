@@ -32,6 +32,11 @@ h1 {
   margin: 32px;
 }
 
+h2 {
+  filter: drop-shadow(4px, 4px, 4px, rgba(0, 0, 0, 0.8));
+  text-shadow: #000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px,#000 0px 0px 4px, #000 0px 0px 4px, #000 0px 0px 4px;
+}
+
 a {
   text-decoration: none;
   color: #f5b05b;
@@ -75,7 +80,6 @@ a:hover {
 @media (min-width: 1980px) {
   .main {
     width: 720px;
-    transform: scale(2);
-    transform-origin: top center;
+    font-size: clamp(1rem, 1.2vw, 1.5rem);
   }
 }

@@ -49,6 +49,7 @@ function startSettings() {
     document.getElementById("startGame").style.display = "none";
     document.getElementById("exitGame").style.display = "flex";
     document.getElementById("legal").style.display = "none";
+    document.getElementById("info").style.display = "none";
   });
 }
 
@@ -82,6 +83,7 @@ function exitSettings() {
     document.getElementById("startGame").style.display = "flex";
     document.getElementById("exitGame").style.display = "none";
     document.getElementById("legal").style.display = "flex";
+    document.getElementById("info").style.display = "flex";
     document.getElementById("restartGame").style.display = "none";
   });
 }

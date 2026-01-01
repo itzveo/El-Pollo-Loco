@@ -35,7 +35,9 @@ h2 {
 canvas {
   background-color: black;
   border: solid black 4px;
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 480px;
   width: 720px;
   box-sizing: border-box;
@@ -206,9 +208,6 @@ canvas {
   canvas {
     width: 100%;
   }
-  h1 {
-    display: none;
-  }
   .hud {
     width: 100%;
   }
@@ -217,9 +216,6 @@ canvas {
 @media only screen and (max-height: 480px) {
   canvas {
     height: 100vh;
-  }
-  h1 {
-    display: none;
   }
   .hud {
     height: 100vh;
@@ -241,5 +237,20 @@ canvas {
 @media (max-height: 1080px) and (max-width: 1380px) {
   .btn-wrapper-bot {
     display: flex;
+  }
+}
+
+@media (max-width: 1200px) and (max-height: 720px) {
+  h1 {
+    display: none
+  }
+  body {
+    justify-content: center;
+  }
+}
+
+@media (min-width: 2561px) and (min-height: 1440px) {
+  h1 {
+    margin-top: 8%;
   }
 }

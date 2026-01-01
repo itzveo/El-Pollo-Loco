@@ -14,6 +14,13 @@ class Character extends movableObject {
   dead = false;
   deathAnimationPlayed = false;
 
+  hitbox = {
+    offsetX: 10,
+    offsetY: 10,
+    width: 0,
+    height: 0,
+  };
+
   IMGS_WALKING = [
     "img/2_character_pepe/2_walk/W-21.png",
     "img/2_character_pepe/2_walk/W-22.png",
@@ -273,7 +280,7 @@ class Character extends movableObject {
    * to allow more precise collision detection.
    */
   updateHitbox() {
-    this.hitbox.width = this.width - 70;
+    this.hitbox.width = this.width - 60;
     this.hitbox.height = this.height - 90;
   }
 

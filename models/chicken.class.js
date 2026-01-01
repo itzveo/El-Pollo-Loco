@@ -4,6 +4,13 @@ class Chicken extends movableObject {
   height = 60;
   width = 40;
 
+  hitbox = {
+    offsetX: 0,
+    offsetY: 10,
+    width: 0,
+    height: 0,
+  };
+
   IMGS_WALKING = [
     "img/3_enemies_chicken/chicken_normal/1_walk/1_w.png",
     "img/3_enemies_chicken/chicken_normal/1_walk/2_w.png",
@@ -51,13 +58,23 @@ class Chicken extends movableObject {
   }
 
   /**
+   * Updates the object's hitbox based on its current size.
+   * The hitbox is intentionally smaller and centered
+   * to allow more precise collision detection.
+   */
+  updateHitbox() {
+    this.hitbox.width = this.width;
+    this.hitbox.height = this.height - 20;
+  }
+
+  /**
    * Returns the enemy's head collision zone
    */
   getHeadHitbox() {
     return {
-      x: this.x + this.width * 0.3,
+      x: this.x,
       y: this.y,
-      width: this.width * 0.4,
+      width: this.width,
       height: this.height * 0.2,
     };
   }

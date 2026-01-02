@@ -59,9 +59,12 @@ class CollectableHandler {
     if (!world.bottleCount) world.bottleCount = 0;
 
     document.getElementById("bottle_collect").play();
-    world.bottleCount++;
 
-    let percentage = Math.min((world.bottleCount / 5) * 100, 100);
-    world.bottleBar.setPercentage(percentage);
+    if (world.bottleCount < 5) {
+      world.bottleCount++;
+
+      let percentage = (world.bottleCount / 5) * 100;
+      world.bottleBar.setPercentage(percentage);
+    }
   }
 }

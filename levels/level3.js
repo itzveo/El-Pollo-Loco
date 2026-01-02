@@ -4,11 +4,11 @@ function initLevel3() {
   const enemies = [];
   const collectables = [];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 5; i++) {
     enemies.push(new Chicken(enemies, world));
   }
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 7; i++) {
     enemies.push(new Baby(enemies, world));
   }
 

@@ -106,16 +106,12 @@ class World {
    * Sets the properties for the game to start.
    */
   restartRequestSettings() {
-    this.throwableObjects = [];
-    this.collectableObjects = [];
-    this.camera_x = 0;
+    this.resetArraysandCamera();
 
     this.coinCount = 0;
     this.bottleCount = 0;
 
-    this.hpBar.setPercentage(100);
-    this.coinBar.setPercentage(0);
-    this.bottleBar.setPercentage(0);
+    this.resetBars();
 
     this.character = new Character();
     this.setWorld();
@@ -132,18 +128,31 @@ class World {
 
     clearInterval(this.gameInterval);
     this.gameInterval = null;
-
     this.level = null;
-    this.throwableObjects = [];
-    this.collectableObjects = [];
 
     this.character = new Character();
     this.setWorld();
 
-    this.camera_x = 0;
+    this.resetBars();
+    this.resetArraysandCamera();
+  }
+
+  /**
+   * Resets the bars when exiting or restarting the game.
+   */
+  resetBars() {
     this.hpBar.setPercentage(100);
     this.coinBar.setPercentage(0);
     this.bottleBar.setPercentage(0);
+  }
+
+  /**
+   * Resets the according Arrays and the camera position.
+   */
+  resetArraysandCamera() {
+    this.throwableObjects = [];
+    this.collectableObjects = [];
+    this.camera_x = 0;
   }
 
   /**
@@ -265,7 +274,7 @@ class World {
 
       this.throwableObjects.push(bottle);
       this.bottleCount--;
-
+      this.bottleBar.count = this.bottleCount;
       let percentage = (this.bottleCount / 5) * 100;
       this.bottleBar.setPercentage(percentage);
     }
@@ -291,37 +300,63 @@ class World {
   }
 
   /**
-   * Handles transitioning between levels.
-   * Stops the game loop, waits 3 seconds, then initializes the next level
-   * and resets the character position and camera.
+   * Starts the level transition process.
+   * Stops the game loop and schedules the next level.
    */
   startLevelTransition() {
+    this.prepareLevelTransition();
+    setTimeout(() => this.finishLevelTransition(), 3000);
+  }
+
+  /**
+   * Prepares the game for a level transition.
+   * Stops the game loop and sets the transition state.
+   */
+  prepareLevelTransition() {
     clearInterval(this.gameInterval);
     this.gameInterval = null;
     this.state = "level_transition";
-    setTimeout(() => {
-      if (this.level === level1) {
-        initLevel2();
-        this.level = level2;
-      } else if (this.level === level2) {
-        initLevel3();
-        this.level = level3;
-      }
-      this.character.x = 100;
-      this.character.y = 180;
-      this.camera_x = 0;
-      this.state = "playing";
-
-      if (this.level.boss) {
-        this.bossBar = new bossBar(this.level.boss);
-      } else {
-        this.bossBar = null;
-      }
-      this.run();
-    }, 3000);
   }
 
-  setLevelTimeout() {}
+  /**
+   * Initializes the next level based on the current one.
+   */
+  loadNextLevel() {
+    if (this.level === level1) {
+      initLevel2();
+      this.level = level2;
+    } else if (this.level === level2) {
+      initLevel3();
+      this.level = level3;
+    }
+  }
+
+  /**
+   * Resets character position and camera for a new level.
+   */
+  resetPlayerAndCamera() {
+    this.character.x = 100;
+    this.character.y = 180;
+    this.camera_x = 0;
+  }
+
+  /**
+   * Creates or removes the boss bar depending on the level.
+   */
+  updateBossBar() {
+    this.bossBar = this.level.boss ? new bossBar(this.level.boss) : null;
+  }
+
+  /**
+   * Finalizes the level transition and restarts the game loop.
+   */
+  finishLevelTransition() {
+    this.loadNextLevel();
+    this.resetPlayerAndCamera();
+    this.updateBossBar();
+    this.state = "playing";
+    this.run();
+  }
 
   /**
    * Adds all objects in the current level to the canvas for rendering.
@@ -452,15 +487,9 @@ class World {
     }
     mO.draw(this.ctx);
 
-    /* if (typeof mO.drawHitbox === "function") {
-      mO.drawHitbox(this.ctx);
+    if (typeof mO.showValue === "function") {
+      mO.showValue(this.ctx);
     }
-    if (typeof mO.drawFootHitbox === "function") {
-      mO.drawFootHitbox(this.ctx);
-    }
-    if (typeof mO.drawHeadHitbox === "function") {
-      mO.drawHeadHitbox(this.ctx);
-    } */
 
     if (mO.inverted) this.flipImageBack(mO);
   }

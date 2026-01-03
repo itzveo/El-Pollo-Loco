@@ -1,5 +1,9 @@
 let level3;
 
+/**
+ * Initiates Level 3 with all according objects like enemies, collectables and boss.
+ * Also creates a bosszone, that cant be escaped once entered.
+ */
 function initLevel3() {
   const enemies = [];
   const collectables = [];
@@ -23,7 +27,7 @@ function initLevel3() {
   const boss = new Boss();
   enemies.push(boss);
 
-  level3 = new Level(enemies, [new Cloud()], loopBgs(), collectables);
+  level3 = new Level(enemies, [new Cloud(), new Cloud()], loopBgs(), collectables);
 
   level3.boss = boss;
 

@@ -43,29 +43,4 @@ class bossBar extends drawableObject {
     this.updatePosition();
     super.draw(ctx);
   }
-
-  /**
-   * Sets the current percentage value and updates
-   * the displayed image based on that value.
-   * @param {number} percentage - Current percentage (0–100).
-   */
-  setPercentage(percentage) {
-    this.percentage = percentage;
-    let path = this.IMGS[this.resolveImgIndex()];
-    this.img = this.imgCache[path];
-  }
-
-  /**
-   * Resolves the correct image index based on
-   * the current percentage value.
-   * @returns {number} The index of the image to be displayed.
-   */
-  resolveImgIndex() {
-    if (this.percentage >= 100) return 5;
-    if (this.percentage >= 80) return 4;
-    if (this.percentage >= 60) return 3;
-    if (this.percentage >= 40) return 2;
-    if (this.percentage >= 20) return 1;
-    return 0;
-  }
 }

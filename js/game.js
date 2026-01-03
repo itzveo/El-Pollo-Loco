@@ -1,6 +1,8 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let titleScreen = new bgObject("img/9_intro_outro_screens/start/startscreen_1.png", 0);
+
 let music = document.getElementById("music");
 let over = document.getElementById("game_over");
 let win = document.getElementById("you_win");

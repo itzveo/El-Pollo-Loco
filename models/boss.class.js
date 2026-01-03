@@ -82,33 +82,48 @@ class Boss extends movableObject {
   animate() {
     setInterval(() => {
       this.tryAttack();
-
-      switch (this.state) {
-        case "alert":
-          this.playAnimation(this.IMGS_ALERT);
-          break;
-
-        case "hurt":
-          this.playAnimation(this.IMGS_HURT);
-          break;
-
-        case "walk":
-          this.walkLogic();
-          this.playAnimation(this.IMGS_WALK);
-          break;
-
-        case "attack":
-          this.attackLogic();
-          this.playAnimation(this.IMGS_ATTACK);
-          break;
-
-        case "dead":
-          this.playAnimation(this.IMGS_DEAD, () => {
-            this.dead = true;
-          });
-          break;
-      }
+      this.handleState();
     }, 120);
+  }
+
+  /**
+   * Handles the different boss states.
+   */
+  handleState() {
+    const actions = {
+      alert: () => this.playAnimation(this.IMGS_ALERT),
+      hurt: () => this.playAnimation(this.IMGS_HURT),
+      walk: () => this.walkState(),
+      attack: () => this.attackState(),
+      dead: () => this.deadState(),
+    };
+
+    actions[this.state]?.();
+  }
+
+  /**
+   * Goes through the walking Logic and plays the walking animation.
+   */
+  walkState() {
+    this.walkLogic();
+    this.playAnimation(this.IMGS_WALK);
+  }
+
+  /**
+   * Goes through the attack Logic and plays attack animation.
+   */
+  attackState() {
+    this.attackLogic();
+    this.playAnimation(this.IMGS_ATTACK);
+  }
+
+  /**
+   * Plays death animation.
+   */
+  deadState() {
+    this.playAnimation(this.IMGS_DEAD, () => {
+      this.dead = true;
+    });
   }
 
   /**

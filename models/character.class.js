@@ -119,38 +119,48 @@ class Character extends movableObject {
   }
 
   /**
-   * Handles player movement and jumping based on keyboard input.
-   * Updates the camera position relative to the character.
+   * Starts the main movement loop for the character.
+   * Handles input, movement, and camera updates.
    */
   move() {
     setInterval(() => {
       if (this.dead) return;
-
       if (!this.world || !this.world.level) return;
 
       this.updateIdleTime();
-
-      const k = this.world.keyboard;
-
-      if (k.RIGHT && this.x < this.world.level.level_end_x) {
-        this.moveRight();
-        this.inverted = false;
-      }
-
-      if (k.LEFT && this.x > 0) {
-        this.moveLeft();
-        this.inverted = true;
-      }
-
-      if (
-        (k.UP && !this.IsAboveGround()) ||
-        (k.SPACE && !this.IsAboveGround())
-      ) {
-        this.jump();
-      }
+      this.handleHorizontalMovement();
+      this.handleJump();
 
       this.world.camera_x = -this.x + 80;
     }, 1000 / 60);
+  }
+
+  /**
+   * Handles left and right movement based on keyboard input.
+   */
+  handleHorizontalMovement() {
+    const k = this.world.keyboard;
+
+    if (k.RIGHT && this.x < this.world.level.level_end_x) {
+      this.moveRight();
+      this.inverted = false;
+    }
+
+    if (k.LEFT && this.x > 0) {
+      this.moveLeft();
+      this.inverted = true;
+    }
+  }
+
+  /**
+   * Handles jumping input and triggers a jump if possible.
+   */
+  handleJump() {
+    const k = this.world.keyboard;
+
+    if ((k.UP || k.SPACE) && !this.IsAboveGround()) {
+      this.jump();
+    }
   }
 
   /**
@@ -197,37 +207,56 @@ class Character extends movableObject {
   }
 
   /**
-   * Plays idle or sleep animations if the player
-   * has been inactive for a certain amount of time.
+   * Handles idle and sleep animations depending on the current game state.
    * @returns {boolean} True if an idle animation was played.
    */
   handleIdleAnimations() {
+    if (!this.isIdleAllowed()) return false;
+
+    const state = this.getIdleState();
+
+    if (state === "sleep") return this.handleSleepState();
+    if (state === "idle") return this.handleIdleState();
+
+    this.stopSleepSound();
+    return false;
+  }
+
+  /**
+   * Checks whether idle animations are allowed.
+   * @returns {boolean} True if the world is in playing state.
+   */
+  isIdleAllowed() {
     if (this.world.state !== "playing") {
       this.stopSleepSound();
       return false;
     }
+    return true;
+  }
 
-    const state = this.getIdleState();
-
-    if (state === "sleep") {
-      if (!this.isSleeping) {
-        this.isSleeping = true;
-        sleep.currentTime = 0;
-        sleep.play();
-      }
-
-      this.playAnimation(this.IMGS_SLEEP);
-      return true;
+  /**
+   * Handles the sleep animation and sound.
+   * @returns {boolean} Always true when sleeping.
+   */
+  handleSleepState() {
+    if (!this.isSleeping) {
+      this.isSleeping = true;
+      sleep.currentTime = 0;
+      sleep.play();
     }
 
-    if (state === "idle") {
-      this.stopSleepSound();
-      this.playAnimation(this.IMGS_IDLE);
-      return true;
-    }
+    this.playAnimation(this.IMGS_SLEEP);
+    return true;
+  }
 
+  /**
+   * Handles the idle animation.
+   * @returns {boolean} Always true when idle.
+   */
+  handleIdleState() {
     this.stopSleepSound();
-    return false;
+    this.playAnimation(this.IMGS_IDLE);
+    return true;
   }
 
   /**
@@ -242,36 +271,63 @@ class Character extends movableObject {
   }
 
   /**
-   * Handles character animation states such as
-   * death, hurt, jumping, idle, walking, and default idle.
+   * Starts the animation loop for the character.
+   * Selects animations based on the current character state.
    */
   showImgs() {
     setInterval(() => {
-      if (this.dead) {
-        return;
-      }
+      if (this.dead) return;
 
-      if (this.isHurt()) {
-        this.playAnimation(this.IMGS_HURT);
-        return;
-      }
-
-      if (this.IsAboveGround()) {
-        this.playAnimation(this.IMGS_JUMPING);
-        return;
-      }
-
-      if (this.handleIdleAnimations()) {
-        return;
-      }
-
-      if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-        this.playAnimation(this.IMGS_WALKING);
-        return;
-      }
+      if (this.tryHurt()) return;
+      if (this.tryJump()) return;
+      if (this.tryIdle()) return;
+      if (this.tryWalk()) return;
 
       this.playAnimation(this.IMG_IDLE);
     }, 50);
+  }
+
+  /**
+   * Plays the hurt animation if the character is hurt.
+   * @returns {boolean} True if the animation was played.
+   */
+  tryHurt() {
+    if (!this.isHurt()) return false;
+
+    this.playAnimation(this.IMGS_HURT);
+    return true;
+  }
+
+  /**
+   * Plays the jumping animation if the character is above ground.
+   * @returns {boolean} True if the animation was played.
+   */
+  tryJump() {
+    if (!this.IsAboveGround()) return false;
+
+    this.playAnimation(this.IMGS_JUMPING);
+    return true;
+  }
+
+  /**
+   * Tries to play idle or sleep animations.
+   * @returns {boolean} True if an idle animation was played.
+   */
+  tryIdle() {
+    return this.handleIdleAnimations();
+  }
+
+  /**
+   * Plays the walking animation if movement keys are pressed.
+   * @returns {boolean} True if the animation was played.
+   */
+  tryWalk() {
+    const k = this.world.keyboard;
+
+    if (!k.RIGHT && !k.LEFT) return false;
+
+    this.playAnimation(this.IMGS_WALKING);
+    return true;
   }
 
   /**

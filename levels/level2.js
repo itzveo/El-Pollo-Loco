@@ -1,5 +1,8 @@
 let level2;
 
+/**
+ * Initiates Level 2 with all according objects like enemies and collectables.
+ */
 function initLevel2() {
   const enemies = [];
   const collectables = [];
@@ -20,6 +23,6 @@ function initLevel2() {
     collectables.push(new coin(collectables, world));
   }
 
-  level2 = new Level(enemies, [new Cloud()], loopBgs(), collectables);
+  level2 = new Level(enemies, [new Cloud(), new Cloud()], loopBgs(), collectables);
   level2.boss = null;
 }

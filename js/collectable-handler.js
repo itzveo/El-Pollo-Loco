@@ -28,6 +28,8 @@ class CollectableHandler {
     document.getElementById("coin_collect").play();
     world.coinCount++;
 
+    world.coinBar.count = world.coinCount;
+
     if ([5, 10, 15, 20, 25].includes(world.coinCount)) {
       let percentage = (world.coinCount / 25) * 100;
       world.coinBar.setPercentage(percentage);
@@ -62,6 +64,8 @@ class CollectableHandler {
 
     if (world.bottleCount < 5) {
       world.bottleCount++;
+
+      world.bottleBar.count = world.bottleCount;
 
       let percentage = (world.bottleCount / 5) * 100;
       world.bottleBar.setPercentage(percentage);

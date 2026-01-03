@@ -23,7 +23,7 @@ function initLevel1() {
     collectables.push(new coin(collectables, world));
   }
 
-  level1 = new Level(enemies, [new Cloud()], loopBgs(), collectables);
+  level1 = new Level(enemies, [new Cloud(), new Cloud()], loopBgs(), collectables);
   level1.boss = null;
 }
 

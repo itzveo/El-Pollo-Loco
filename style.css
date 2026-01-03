@@ -241,9 +241,6 @@ canvas {
 }
 
 @media (max-width: 1200px) and (max-height: 720px) {
-  h1 {
-    display: none
-  }
   body {
     justify-content: center;
   }
@@ -252,5 +249,11 @@ canvas {
 @media (min-width: 2561px) and (min-height: 1440px) {
   h1 {
     margin-top: 8%;
+  }
+}
+
+@media (max-height: 720px) {
+  h1 {
+    display: none;
   }
 }

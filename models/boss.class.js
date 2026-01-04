@@ -300,9 +300,9 @@ class Boss extends movableObject {
    */
   getHeadHitbox() {
     return {
-      x: this.x + this.width * 0.3,
+      x: this.x,
       y: this.y - 10,
-      width: this.width * 0.4,
+      width: this.width,
       height: this.height * 0.1,
     };
   }

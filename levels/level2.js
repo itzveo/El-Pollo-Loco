@@ -11,7 +11,7 @@ function initLevel2() {
     enemies.push(new Chicken(enemies, world));
   }
 
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 5; i++) {
     enemies.push(new Baby(enemies, world));
   }
 

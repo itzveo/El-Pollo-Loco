@@ -12,7 +12,7 @@ function initLevel3() {
     enemies.push(new Chicken(enemies, world));
   }
 
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 3; i++) {
     enemies.push(new Baby(enemies, world));
   }
 

@@ -99,17 +99,7 @@ class worldRenderer {
     if (typeof mO.showValue === "function") {
       mO.showValue(this.ctx);
     }
-
-    if (typeof mO.drawHitbox === "function") {
-      mO.drawHitbox(this.ctx);
-    }
-    if (typeof mO.drawFootHitbox === "function") {
-      mO.drawFootHitbox(this.ctx);
-    }
-    if (typeof mO.drawHeadHitbox === "function") {
-      mO.drawHeadHitbox(this.ctx);
-    }
-
+    
     if (mO.inverted) this.flipImageBack(mO);
   }
 

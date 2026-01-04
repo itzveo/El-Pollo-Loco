@@ -87,15 +87,18 @@ class throwableObject extends movableObject {
    */
   break() {
     if (this.isBreaking) return;
-
     this.isBreaking = true;
-
     clearInterval(this.throwInterval);
     clearInterval(this.flyInterval);
-
     this.speed = 0;
     this.speedY = 0;
+    this.breakLoop();
+  }
 
+  /**
+   * Loops through the imgs for the breaking animation.
+   */
+  breakLoop() {
     let i = 0;
     this.breakInterval = setInterval(() => {
       this.img = this.imgCache[this.IMGS_BREAK[i]];

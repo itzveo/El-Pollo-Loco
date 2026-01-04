@@ -1,7 +1,10 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
-let titleScreen = new bgObject("img/9_intro_outro_screens/start/startscreen_1.png", 0);
+let titleScreen = new bgObject(
+  "img/9_intro_outro_screens/start/startscreen_1.png",
+  0
+);
 
 let music = document.getElementById("music");
 let over = document.getElementById("game_over");
@@ -198,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
  */
 window.addEventListener("keydown", (e) => {
   if (!world.character || world.character.dead) return;
-  
+
   if (e.keyCode == 32) {
     keyboard.SPACE = true;
     if (world.state === "playing") {

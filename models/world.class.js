@@ -26,6 +26,7 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+    this.rederer = new worldRenderer(this);
 
     this.winImg = new Image();
     this.winImg.src = "img/You won, you lost/You Win A.png";
@@ -35,6 +36,11 @@ class World {
 
     this.setWorld();
     this.draw();
+  }
+
+  draw() {
+    this.rederer.draw();
+    requestAnimationFrame(() => this.draw());
   }
 
   /**
@@ -359,44 +365,6 @@ class World {
   }
 
   /**
-   * Adds all objects in the current level to the canvas for rendering.
-   * Includes background objects, clouds, throwable objects,
-   * collectables, enemies, boss bar (if present), and the player character.
-   */
-  addAllObjects() {
-    this.addObjectsToMap(this.level.bgObjects);
-    this.addObjectsToMap(this.level.clouds);
-    this.addObjectsToMap(this.throwableObjects);
-    this.addObjectsToMap(this.level.collectableObjects);
-    this.addObjectsToMap(this.level.enemies);
-    this.addToMap(this.character);
-
-    if (this.level.boss && this.bossBar) {
-      this.addToMap(this.bossBar);
-    }
-  }
-
-  /**
-   * Main drawing loop for the world.
-   * Clears the canvas, handles screens (title, win, lose, level transitions),
-   * renders all objects, and updates UI bars.
-   */
-  draw() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    if (!this.handleScreens()) {
-      if (this.level) {
-        this.ctx.translate(this.camera_x, 0);
-        this.addAllObjects();
-        this.ctx.translate(-this.camera_x, 0);
-        this.addBars();
-      }
-    }
-
-    requestAnimationFrame(() => this.draw());
-  }
-
-  /**
    * Draws the level transition screen.
    * Displays the level number centered on a black background.
    */
@@ -439,86 +407,5 @@ class World {
    */
   clearAllIntervals() {
     clearAllIntervals();
-  }
-
-  /**
-   * Handles special screens like title, level transitions, win, and lose.
-   * Draws the appropriate screen and returns true if a special screen was displayed.
-   * @returns {boolean} True if a special screen was handled, otherwise false.
-   */
-  handleScreens() {
-    switch (this.state) {
-      case "title":
-        this.drawTitleScreen();
-        return true;
-      case "level_transition":
-        this.drawLevelTransition();
-        return true;
-      case "lost":
-        this.drawLooseScreen();
-        return true;
-      case "won":
-        this.drawWinScreen();
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  /**
-   * Adds all UI bars (health, coin, bottle) to the canvas.
-   */
-  addBars() {
-    this.addToMap(this.hpBar);
-    this.addToMap(this.coinBar);
-    this.addToMap(this.bottleBar);
-  }
-
-  /**
-   * Adds a single object to the canvas.
-   * Handles flipping of images if the object is inverted,
-   * draws the object and its border, and restores context.
-   * @param {Object} mO - The movable object to add.
-   */
-  addToMap(mO) {
-    if (mO.inverted) this.flipImage(mO);
-    if (typeof mO.updateHitbox === "function") {
-      mO.updateHitbox();
-    }
-    mO.draw(this.ctx);
-
-    if (typeof mO.showValue === "function") {
-      mO.showValue(this.ctx);
-    }
-
-    if (mO.inverted) this.flipImageBack(mO);
-  }
-
-  /**
-   * Flips an object's image horizontally for inverted rendering.
-   * @param {Object} mO - The object to flip.
-   */
-  flipImage(mO) {
-    this.ctx.save();
-    this.ctx.translate(mO.width, 0);
-    this.ctx.scale(-1, 1);
-    mO.x = mO.x * -1;
-  }
-
-  /**
-   * Restores an object's image after horizontal flipping.
-   * @param {Object} mO - The object to restore.
-   */
-  flipImageBack(mO) {
-    mO.x = mO.x * -1;
-    this.ctx.restore();
-  }
-
-  /**
-   * Adds multiple objects to the canvas.
-   * @param {Array} objects - Array of objects to add.
-   */
-  addObjectsToMap(objects) {
-    objects.forEach((o) => this.addToMap(o));
   }
 }
